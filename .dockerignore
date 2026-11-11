@@ -1,0 +1,11 @@
+.git
+.github
+vendor
+node_modules
+coverage-html
+coverage.txt
+coverage.xml
+trivy-results.sarif
+.trivy-cache
+latest-app.zip
+.env
