@@ -1,72 +1,92 @@
-import { Head, Link, router, useForm } from '@inertiajs/react';
-import AppLayout from '../../Layouts/AppLayout';
-import { 
-    Plus, 
-    Sparkles, 
-    Download, 
-    Upload, 
-    MoreVertical, 
-    Eye, 
-    Edit2, 
-    Trash2, 
-    CheckCircle, 
-    Clock, 
-    FileText, 
-    Search, 
-    X, 
-    Loader2, 
-    Image as ImageIcon 
-} from 'lucide-react';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { useState, useRef, useEffect } from 'react';
 import Editor from '@toast-ui/editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
+import { X, Sparkles, Upload, Download, Loader2, Image as ImageIcon } from 'lucide-react';
 
-export default function PostIndex({ posts, stats, categories, filters }) {
-    const [search, setSearch] = useState(filters?.q || '');
-    const [activeKebab, setActiveKebab] = useState(null);
+// Modular Dashboard Components
+import Sidebar from '../../Components/Dashboard/Sidebar';
+import TopBar from '../../Components/Dashboard/TopBar';
+import GreetingBanner from '../../Components/Dashboard/GreetingBanner';
+import StatCards from '../../Components/Dashboard/StatCards';
+import ProportionDonutCard from '../../Components/Dashboard/ProportionDonutCard';
+import QuickActionsCard from '../../Components/Dashboard/QuickActionsCard';
+import ArticleList from '../../Components/Dashboard/ArticleList';
+import DeleteConfirmModal from '../../Components/Dashboard/DeleteConfirmModal';
+import ToastNotification from '../../Components/Dashboard/ToastNotification';
+import { DashboardSkeleton } from '../../Components/Dashboard/Skeletons';
 
-    // Full Screen Post Modal state (Create / Edit)
-    const [modalOpen, setModalOpen] = useState(false);
+// Mock Data Fallback
+import { mockMember, mockPosts, mockStats } from './mockData';
+
+export default function MemberDashboard(props) {
+    const { auth } = usePage().props || {};
+
+    // Ambil data dari props Inertia atau fallback ke mockData
+    const member = auth?.user || props.user || mockMember;
+    const initialPosts = props.posts?.data || props.posts || mockPosts;
+    const stats = props.stats || mockStats;
+    const categories = props.categories || ['Teknologi', 'Gaya Hidup', 'Desain', 'Karir', 'Umum'];
+    const initialQuery = props.filters?.q || '';
+
+    // State Utama
+    const [postsList, setPostsList] = useState(initialPosts);
+    const [search, setSearch] = useState(initialQuery);
+    const [isSearching, setIsSearching] = useState(Boolean(initialQuery));
+    const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [toastMessage, setToastMessage] = useState(null);
+    const [showAllArticles, setShowAllArticles] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    // Modal Hapus
+    const [deleteModalPost, setDeleteModalPost] = useState(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    // Modal Tambah / Ubah Artikel
+    const [isEditorModalOpen, setIsEditorModalOpen] = useState(false);
     const [editingPost, setEditingPost] = useState(null);
+    const editorContainerRef = useRef(null);
+    const editorInstanceRef = useRef(null);
 
-    // AI Modal state
+    // AI Modal State
     const [aiModalOpen, setAiModalOpen] = useState(false);
     const [aiLoading, setAiLoading] = useState(false);
     const [aiResults, setAiResults] = useState([]);
     const [aiForm, setAiForm] = useState({
         topic: '',
-        category: categories?.[0] || 'Teknologi',
+        category: categories[0] || 'Teknologi',
         count: 2,
     });
 
-    // Import Modal state
+    // Import Excel Modal State
     const [importModalOpen, setImportModalOpen] = useState(false);
     const [importFile, setImportFile] = useState(null);
     const [importing, setImporting] = useState(false);
 
-    // Floating status state
-    const [floatingStatus, setFloatingStatus] = useState(null);
-
-    // Toast UI Editor instance
-    const editorContainerRef = useRef(null);
-    const editorInstanceRef = useRef(null);
-
-    // Post Form
-    const { data, setData, post, put, processing, errors, reset } = useForm({
+    // Form Artikel Baru / Ubah
+    const { data, setData, processing, errors, reset } = useForm({
         title: '',
-        category: categories?.[0] || 'Teknologi',
+        category: categories[0] || 'Teknologi',
         excerpt: '',
         content: '',
         is_published: false,
     });
 
-    // Initialize or destroy Toast UI Editor inside Fullscreen modal
+    // Sinkronisasi data jika props berubah
     useEffect(() => {
-        if (modalOpen && editorContainerRef.current) {
+        if (props.posts?.data) {
+            setPostsList(props.posts.data);
+        }
+    }, [props.posts]);
+
+    // Inisialisasi TOAST UI Editor
+    useEffect(() => {
+        if (isEditorModalOpen && editorContainerRef.current) {
             editorContainerRef.current.innerHTML = '';
             editorInstanceRef.current = new Editor({
                 el: editorContainerRef.current,
-                height: '420px',
+                height: '380px',
                 initialEditType: 'markdown',
                 previewStyle: 'vertical',
                 initialValue: data.content || '',
@@ -86,95 +106,163 @@ export default function PostIndex({ posts, stats, categories, filters }) {
                 editorInstanceRef.current = null;
             }
         };
-    }, [modalOpen]);
+    }, [isEditorModalOpen]);
 
-    const openCreateModal = () => {
+    // Handle Pencarian
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        if (search.trim() === '') {
+            handleResetSearch();
+            return;
+        }
+
+        setIsSearching(true);
+        if (props.posts) {
+            router.get('/dashboard/posts', { q: search }, { preserveState: true });
+        } else {
+            // Mock filter
+            const filtered = mockPosts.filter((p) =>
+                p.title.toLowerCase().includes(search.toLowerCase()) ||
+                p.category.toLowerCase().includes(search.toLowerCase())
+            );
+            setPostsList(filtered);
+        }
+    };
+
+    const handleResetSearch = () => {
+        setSearch('');
+        setIsSearching(false);
+        if (props.posts) {
+            router.get('/dashboard/posts', {}, { preserveState: true });
+        } else {
+            setPostsList(mockPosts);
+        }
+    };
+
+    // Buka Modal Tambah Artikel
+    const handleOpenCreateModal = () => {
         setEditingPost(null);
         reset();
         setData({
             title: '',
-            category: categories?.[0] || 'Teknologi',
+            category: categories[0] || 'Teknologi',
             excerpt: '',
             content: '',
             is_published: false,
         });
-        setModalOpen(true);
+        setIsEditorModalOpen(true);
     };
 
-    const openEditModal = (p) => {
-        setEditingPost(p);
+    // Buka Modal Ubah Artikel
+    const handleOpenEditModal = (post) => {
+        setEditingPost(post);
         setData({
-            title: p.title,
-            category: p.category,
-            excerpt: p.excerpt || '',
-            content: p.content || '',
-            is_published: Boolean(p.is_published),
+            title: post.title,
+            category: post.category,
+            excerpt: post.excerpt || '',
+            content: post.content || '',
+            is_published: Boolean(post.is_published),
         });
-        setModalOpen(true);
-        setActiveKebab(null);
+        setIsEditorModalOpen(true);
     };
 
-    const handleSearch = (e) => {
+    // Submit Artikel (Draf / Publikasi)
+    const handleSavePost = (e, shouldPublish = false) => {
         e.preventDefault();
-        router.get('/dashboard/posts', { q: search }, { preserveState: true });
+        const markdown = editorInstanceRef.current ? editorInstanceRef.current.getMarkdown() : data.content;
+        const payload = { ...data, content: markdown, is_published: shouldPublish };
+
+        if (props.posts) {
+            if (editingPost) {
+                router.put(`/dashboard/posts/${editingPost.id}`, payload, {
+                    onSuccess: () => {
+                        setIsEditorModalOpen(false);
+                        setToastMessage('Artikel berhasil diperbarui!');
+                    },
+                    onError: () => setErrorMessage('Gagal memperbarui artikel.'),
+                });
+            } else {
+                router.post('/dashboard/posts', payload, {
+                    onSuccess: () => {
+                        setIsEditorModalOpen(false);
+                        setToastMessage(shouldPublish ? 'Artikel berhasil dipublikasikan!' : 'Draf artikel berhasil disimpan!');
+                    },
+                    onError: () => setErrorMessage('Gagal menyimpan artikel.'),
+                });
+            }
+        } else {
+            // Mock standalone
+            if (editingPost) {
+                setPostsList(postsList.map(p => p.id === editingPost.id ? { ...p, ...payload } : p));
+                setToastMessage('Artikel berhasil diperbarui (Mock)!');
+            } else {
+                const newPost = {
+                    id: Date.now(),
+                    ...payload,
+                    formatted_date: 'Hari ini',
+                    created_at: new Date().toISOString(),
+                };
+                setPostsList([newPost, ...postsList]);
+                setToastMessage('Artikel berhasil ditambahkan (Mock)!');
+            }
+            setIsEditorModalOpen(false);
+        }
     };
 
-    const handleFormSubmit = (e, shouldPublish = false) => {
-        e.preventDefault();
-        const markdownContent = editorInstanceRef.current ? editorInstanceRef.current.getMarkdown() : data.content;
-
-        setFloatingStatus('Memproses tindakan...');
-        const payload = {
-            ...data,
-            content: markdownContent,
-            is_published: shouldPublish,
-        };
-
-        if (editingPost) {
-            router.put(`/dashboard/posts/${editingPost.id}`, payload, {
+    // Cepat Toggle Publish / Draft
+    const handleTogglePublish = (post) => {
+        if (props.posts) {
+            router.patch(`/dashboard/posts/${post.id}/publish`, {}, {
+                preserveScroll: true,
                 onSuccess: () => {
-                    setModalOpen(false);
-                    setFloatingStatus(null);
+                    setToastMessage(`Status "${post.title}" berhasil diubah!`);
                 },
-                onError: () => setFloatingStatus(null),
             });
         } else {
-            router.post('/dashboard/posts', payload, {
-                onSuccess: () => {
-                    setModalOpen(false);
-                    setFloatingStatus(null);
-                },
-                onError: () => setFloatingStatus(null),
-            });
+            // Mock toggle
+            setPostsList(postsList.map(p => p.id === post.id ? { ...p, is_published: !p.is_published } : p));
+            setToastMessage(`Status artikel berhasil beralih!`);
         }
     };
 
-    const handleTogglePublish = (p) => {
-        setFloatingStatus('Memproses tindakan...');
-        router.patch(`/dashboard/posts/${p.id}/publish`, {}, {
-            preserveScroll: true,
-            onFinish: () => setFloatingStatus(null),
-        });
-    };
-
-    const handleDelete = (p) => {
-        if (confirm(`Apakah Anda yakin ingin menghapus artikel "${p.title}"? Tindakan ini tidak dapat dibatalkan.`)) {
-            setFloatingStatus('Memproses tindakan...');
-            router.delete(`/dashboard/posts/${p.id}`, {
+    // Handle Hapus Artikel dengan Dialog
+    const handleConfirmDelete = (post) => {
+        setIsDeleting(true);
+        if (props.posts) {
+            router.delete(`/dashboard/posts/${post.id}`, {
                 preserveScroll: true,
-                onFinish: () => {
-                    setFloatingStatus(null);
-                    setActiveKebab(null);
+                onSuccess: () => {
+                    setIsDeleting(false);
+                    setDeleteModalPost(null);
+                    setToastMessage(`Artikel "${post.title}" berhasil dihapus.`);
+                },
+                onError: () => {
+                    setIsDeleting(false);
+                    setErrorMessage('Gagal menghapus artikel.');
                 },
             });
+        } else {
+            // Mock delete
+            setPostsList(postsList.filter(p => p.id !== post.id));
+            setIsDeleting(false);
+            setDeleteModalPost(null);
+            setToastMessage(`Artikel "${post.title}" berhasil dihapus (Mock).`);
         }
     };
 
-    // AI Generate
+    // Ekspor Excel
+    const handleExportExcel = () => {
+        if (props.posts) {
+            window.location.href = '/dashboard/posts/export';
+        } else {
+            setToastMessage('Fitur Ekspor Excel terhubung ke endpoint /dashboard/posts/export.');
+        }
+    };
+
+    // AI Generator Submit
     const handleGenerateAi = async (e) => {
         e.preventDefault();
         setAiLoading(true);
-        setFloatingStatus('Memproses tindakan AI...');
         try {
             const res = await fetch('/dashboard/posts/ai-generate', {
                 method: 'POST',
@@ -188,33 +276,29 @@ export default function PostIndex({ posts, stats, categories, filters }) {
             if (result.data) {
                 setAiResults(result.data);
             }
-        } catch (err) {
-            alert('Gagal menghasilkan artikel AI. Silakan coba lagi.');
+        } catch {
+            setToastMessage('Gagal generate AI (periksa koneksi API).');
         } finally {
             setAiLoading(false);
-            setFloatingStatus(null);
         }
     };
 
     const handleSaveAiBatch = () => {
-        setFloatingStatus('Memproses penyimpanan draf AI...');
         router.post('/dashboard/posts/ai-save', { posts: aiResults }, {
             onSuccess: () => {
                 setAiModalOpen(false);
                 setAiResults([]);
-                setFloatingStatus(null);
+                setToastMessage('Batch draf AI berhasil disimpan!');
             },
-            onError: () => setFloatingStatus(null),
         });
     };
 
-    // Excel Import
+    // Import Excel Submit
     const handleImportSubmit = (e) => {
         e.preventDefault();
         if (!importFile) return;
 
         setImporting(true);
-        setFloatingStatus('Memproses impor Excel...');
         const formData = new FormData();
         formData.append('file', importFile);
 
@@ -223,369 +307,227 @@ export default function PostIndex({ posts, stats, categories, filters }) {
                 setImportModalOpen(false);
                 setImportFile(null);
                 setImporting(false);
-                setFloatingStatus(null);
+                setToastMessage('Data artikel berhasil diimpor dari Excel!');
             },
             onError: () => {
                 setImporting(false);
-                setFloatingStatus(null);
+                setToastMessage('Gagal mengimpor file Excel.');
             },
         });
     };
 
+    const handleLogout = () => {
+        router.post('/logout');
+    };
+
     return (
-        <AppLayout>
-            <Head title="Dashboard Pengelolaan Artikel" />
+        <div className="min-h-screen bg-[#2B3252] text-white p-3 sm:p-6 lg:p-8 font-sans selection:bg-[#5873E0] selection:text-white">
+            <Head title="Member Dashboard - Blog" />
 
-            {/* Floating Status Pill */}
-            {floatingStatus && (
-                <div className="fixed bottom-6 right-6 z-50 bg-[#14122B] text-white px-5 py-3 rounded-full text-xs font-semibold shadow-lg flex items-center gap-2.5 animate-pulse">
-                    <Loader2 className="w-4 h-4 animate-spin text-[#5B4FE9]" />
-                    <span>{floatingStatus}</span>
-                </div>
-            )}
+            {/* Notifikasi Toast Sukses / Info */}
+            <ToastNotification 
+                message={toastMessage} 
+                onClose={() => setToastMessage(null)} 
+            />
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                {/* Header Section */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                    <div>
-                        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#14122B]">Dashboard Artikel</h1>
-                        <p className="mt-1 text-sm text-[#6B6A80]">
-                            Kelola karya tulis Anda, perbarui draf, dan gunakan teknologi AI generator.
-                        </p>
-                    </div>
+            {/* Dialog Konfirmasi Hapus */}
+            <DeleteConfirmModal
+                isOpen={Boolean(deleteModalPost)}
+                post={deleteModalPost}
+                onConfirm={handleConfirmDelete}
+                onCancel={() => setDeleteModalPost(null)}
+                isProcessing={isDeleting}
+            />
 
-                    <div className="flex flex-wrap items-center gap-2.5">
-                        <button
-                            onClick={openCreateModal}
-                            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#5B4FE9] hover:bg-[#4A3FD1] text-white text-xs font-semibold shadow-sm transition cursor-pointer"
-                        >
-                            <Plus className="w-4 h-4" />
-                            <span>Tulis Artikel</span>
-                        </button>
+            {/* Kontainer Utama Membulat (Radius 28px) */}
+            <div className="max-w-[1600px] mx-auto bg-[#2B3252] rounded-[28px] flex flex-col md:flex-row gap-6">
+                {/* 1. SIDEBAR KIRI */}
+                <Sidebar
+                    activeMenu="dashboard"
+                    onNavigate={(action) => {
+                        if (action === 'open-ai') setAiModalOpen(true);
+                        if (action === 'open-import') setImportModalOpen(true);
+                    }}
+                    onLogout={handleLogout}
+                    isMobileOpen={isMobileMenuOpen}
+                    setIsMobileOpen={setIsMobileMenuOpen}
+                />
 
-                        <button
-                            onClick={() => setAiModalOpen(true)}
-                            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-[#E8E7F0] hover:bg-[#F4F3FF] text-[#5B4FE9] text-xs font-semibold shadow-sm transition cursor-pointer"
-                        >
-                            <Sparkles className="w-4 h-4" />
-                            <span>AI Generator</span>
-                        </button>
+                {/* 2. AREA TENGAH */}
+                <main className="flex-1 space-y-6 min-w-0">
+                    {/* Top Bar: Pencarian & Avatar */}
+                    <TopBar
+                        search={search}
+                        setSearch={setSearch}
+                        onSearchSubmit={handleSearchSubmit}
+                        member={member}
+                        onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+                    />
 
-                        <a
-                            href="/dashboard/posts/export"
-                            className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-white border border-[#E8E7F0] hover:bg-[#F4F3FF] text-[#6B6A80] hover:text-[#14122B] text-xs font-medium transition"
-                            title="Ekspor ke Excel"
-                        >
-                            <Download className="w-4 h-4" />
-                            <span className="hidden sm:inline">Ekspor</span>
-                        </a>
-
-                        <button
-                            onClick={() => setImportModalOpen(true)}
-                            className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-white border border-[#E8E7F0] hover:bg-[#F4F3FF] text-[#6B6A80] hover:text-[#14122B] text-xs font-medium transition cursor-pointer"
-                            title="Impor dari Excel"
-                        >
-                            <Upload className="w-4 h-4" />
-                            <span className="hidden sm:inline">Impor</span>
-                        </button>
-                    </div>
-                </div>
-
-                {/* 3 Metric Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
-                    <div className="bg-white rounded-2xl p-5 border border-[#E8E7F0] shadow-sm flex items-center justify-between">
-                        <div>
-                            <p className="text-xs font-medium text-[#6B6A80]">Total Artikel</p>
-                            <p className="text-3xl font-extrabold text-[#14122B] mt-1">{stats?.total_posts || 0}</p>
-                        </div>
-                        <div className="w-12 h-12 rounded-xl bg-[#E9E7FD] text-[#5B4FE9] flex items-center justify-center">
-                            <FileText className="w-6 h-6" />
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-2xl p-5 border border-[#E8E7F0] shadow-sm flex items-center justify-between">
-                        <div>
-                            <p className="text-xs font-medium text-[#6B6A80]">Total Selesai (Published)</p>
-                            <p className="text-3xl font-extrabold text-emerald-600 mt-1">{stats?.total_published || 0}</p>
-                        </div>
-                        <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                            <CheckCircle className="w-6 h-6" />
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-2xl p-5 border border-[#E8E7F0] shadow-sm flex items-center justify-between">
-                        <div>
-                            <p className="text-xs font-medium text-[#6B6A80]">Belum Selesai (Draft)</p>
-                            <p className="text-3xl font-extrabold text-amber-600 mt-1">{stats?.total_draft || 0}</p>
-                        </div>
-                        <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                            <Clock className="w-6 h-6" />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Search Bar for Member Posts */}
-                <div className="bg-white rounded-2xl p-4 border border-[#E8E7F0] shadow-sm mb-6 flex items-center justify-between">
-                    <form onSubmit={handleSearch} className="flex-1 max-w-md relative">
-                        <Search className="w-4 h-4 text-[#A3A2B5] absolute left-3.5 top-1/2 -translate-y-1/2" />
-                        <input
-                            type="text"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            placeholder="Cari artikel saya..."
-                            className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-[#E8E7F0] focus:outline-none focus:border-[#5B4FE9] transition"
-                        />
-                    </form>
-                    <span className="text-xs text-[#A3A2B5]">{posts?.total || 0} artikel ditemukan</span>
-                </div>
-
-                {/* List View Table */}
-                <div className="bg-white rounded-2xl border border-[#E8E7F0] shadow-sm overflow-hidden">
-                    {posts?.data?.length > 0 ? (
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left text-sm text-[#14122B]">
-                                <thead className="bg-[#FAFAFD] border-b border-[#E8E7F0] text-xs font-bold text-[#6B6A80] uppercase tracking-wider">
-                                    <tr>
-                                        <th className="py-3.5 px-6">Artikel</th>
-                                        <th className="py-3.5 px-4">Kategori</th>
-                                        <th className="py-3.5 px-4">Status & Publikasi</th>
-                                        <th className="py-3.5 px-4">Tanggal Buat</th>
-                                        <th className="py-3.5 px-6 text-right">Tindakan</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-[#E8E7F0]">
-                                    {posts.data.map((postItem) => (
-                                        <tr key={postItem.id} className="hover:bg-[#F4F3FF]/40 transition group">
-                                            {/* Column: Title & Excerpt */}
-                                            <td className="py-4 px-6 max-w-sm">
-                                                <div className="flex items-center gap-3">
-                                                    {postItem.cover_image_path ? (
-                                                        <img
-                                                            src={`/storage/${postItem.cover_image_path}`}
-                                                            alt=""
-                                                            className="w-12 h-12 rounded-lg object-cover border border-[#E8E7F0] shrink-0"
-                                                        />
-                                                    ) : (
-                                                        <div className="w-12 h-12 rounded-lg bg-[#E9E7FD] text-[#5B4FE9] flex items-center justify-center shrink-0">
-                                                            <FileText className="w-5 h-5 opacity-50" />
-                                                        </div>
-                                                    )}
-                                                    <div className="min-w-0">
-                                                        <Link
-                                                            href={`/dashboard/posts/${postItem.id}`}
-                                                            className="font-bold text-[#14122B] group-hover:text-[#5B4FE9] transition line-clamp-1"
-                                                        >
-                                                            {postItem.title}
-                                                        </Link>
-                                                        <p className="text-xs text-[#6B6A80] line-clamp-1 mt-0.5">
-                                                            {postItem.excerpt || 'Tidak ada ringkasan...'}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </td>
-
-                                            {/* Column: Category */}
-                                            <td className="py-4 px-4 whitespace-nowrap">
-                                                <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-[#F1F0F7] text-[#6B6A80]">
-                                                    {postItem.category}
-                                                </span>
-                                            </td>
-
-                                            {/* Column: Status & Toggle Quick Action */}
-                                            <td className="py-4 px-4 whitespace-nowrap">
-                                                <div className="flex items-center gap-2">
-                                                    <span
-                                                        className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-                                                            postItem.is_published
-                                                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                                                                : 'bg-amber-50 text-amber-700 border border-amber-200'
-                                                        }`}
-                                                    >
-                                                        {postItem.is_published ? 'Published' : 'Draft'}
-                                                    </span>
-
-                                                    {/* Quick Toggle Button */}
-                                                    <button
-                                                        onClick={() => handleTogglePublish(postItem)}
-                                                        className="text-[11px] font-medium text-[#5B4FE9] hover:underline cursor-pointer"
-                                                        title="Beralih status publikasi"
-                                                    >
-                                                        {postItem.is_published ? 'Tarik Draf' : 'Terbitkan'}
-                                                    </button>
-                                                </div>
-                                            </td>
-
-                                            {/* Column: Date */}
-                                            <td className="py-4 px-4 whitespace-nowrap text-xs text-[#A3A2B5]">
-                                                {new Date(postItem.created_at).toLocaleDateString('id-ID', {
-                                                    day: 'numeric',
-                                                    month: 'short',
-                                                    year: 'numeric',
-                                                })}
-                                            </td>
-
-                                            {/* Column: Kebab Action Menu */}
-                                            <td className="py-4 px-6 text-right whitespace-nowrap relative">
-                                                <div className="inline-block text-left">
-                                                    <button
-                                                        onClick={() =>
-                                                            setActiveKebab(activeKebab === postItem.id ? null : postItem.id)
-                                                        }
-                                                        className="p-1.5 rounded-lg text-[#6B6A80] hover:text-[#14122B] hover:bg-[#E8E7F0] transition cursor-pointer"
-                                                    >
-                                                        <MoreVertical className="w-4 h-4" />
-                                                    </button>
-
-                                                    {activeKebab === postItem.id && (
-                                                        <div className="absolute right-6 top-10 w-36 bg-white rounded-xl shadow-lg border border-[#E8E7F0] py-1.5 z-20">
-                                                            <Link
-                                                                href={`/dashboard/posts/${postItem.id}`}
-                                                                className="flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-[#14122B] hover:bg-[#F4F3FF] hover:text-[#5B4FE9]"
-                                                            >
-                                                                <Eye className="w-3.5 h-3.5" />
-                                                                <span>Detail</span>
-                                                            </Link>
-                                                            <button
-                                                                onClick={() => openEditModal(postItem)}
-                                                                className="w-full text-left flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-[#14122B] hover:bg-[#F4F3FF] hover:text-[#5B4FE9] cursor-pointer"
-                                                            >
-                                                                <Edit2 className="w-3.5 h-3.5" />
-                                                                <span>Ubah</span>
-                                                            </button>
-                                                            <button
-                                                                onClick={() => handleDelete(postItem)}
-                                                                className="w-full text-left flex items-center gap-2 px-3.5 py-2 text-xs font-medium text-red-600 hover:bg-red-50 cursor-pointer"
-                                                            >
-                                                                <Trash2 className="w-3.5 h-3.5" />
-                                                                <span>Hapus</span>
-                                                            </button>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                    {isLoading ? (
+                        <DashboardSkeleton />
                     ) : (
-                        <div className="py-16 text-center">
-                            <FileText className="w-12 h-12 text-[#A3A2B5] mx-auto mb-3 opacity-40" />
-                            <h3 className="text-base font-bold text-[#14122B]">Belum ada artikel</h3>
-                            <p className="text-xs text-[#6B6A80] mt-1 max-w-sm mx-auto">
-                                Anda belum memiliki artikel. Mulai buat artikel pertama Anda sekarang atau gunakan AI Generator.
-                            </p>
-                            <button
-                                onClick={openCreateModal}
-                                className="mt-4 px-4 py-2 rounded-xl bg-[#5B4FE9] text-white text-xs font-semibold hover:bg-[#4A3FD1] transition cursor-pointer"
-                            >
-                                Tulis Artikel Baru
-                            </button>
-                        </div>
+                        <>
+                            {/* Banner Sapaan (Tombol Primer Satu-satunya) */}
+                            <GreetingBanner
+                                memberName={member.name}
+                                onAddArticle={handleOpenCreateModal}
+                            />
+
+                            {/* Baris 3 Kartu Statistik */}
+                            <StatCards stats={stats} />
+
+                            {/* Kartu Proporsi Artikel (Donut Chart) */}
+                            <ProportionDonutCard
+                                published={stats.published}
+                                draft={stats.draft}
+                            />
+
+                            {/* Daftar Artikel (List View) */}
+                            <ArticleList
+                                posts={postsList}
+                                isSearchActive={isSearching}
+                                onResetSearch={handleResetSearch}
+                                onAddArticle={handleOpenCreateModal}
+                                onTogglePublish={handleTogglePublish}
+                                onEditArticle={handleOpenEditModal}
+                                onDeleteRequest={(post) => setDeleteModalPost(post)}
+                                onViewDetail={(post) => router.get(`/dashboard/posts/${post.id}`)}
+                                errorMessage={errorMessage}
+                                onRetry={() => {
+                                    setErrorMessage(null);
+                                    handleResetSearch();
+                                }}
+                                showAll={showAllArticles}
+                                setShowAll={setShowAllArticles}
+                            />
+                        </>
                     )}
+                </main>
+
+                {/* 3. PANEL KANAN (Aksi Cepat) */}
+                <div className="w-full xl:w-72 shrink-0">
+                    <QuickActionsCard
+                        onOpenAi={() => setAiModalOpen(true)}
+                        onOpenImport={() => setImportModalOpen(true)}
+                        onExportExcel={handleExportExcel}
+                    />
                 </div>
             </div>
 
-            {/* FULL SCREEN MODAL: Create & Edit Post */}
-            {modalOpen && (
-                <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex flex-col justify-between overflow-hidden">
-                    {/* Contrasting Header */}
-                    <div className="bg-[#14122B] text-white px-6 py-4 flex items-center justify-between shadow-md shrink-0">
+            {/* FULL SCREEN / LARGE MODAL: Tambah & Ubah Artikel */}
+            {isEditorModalOpen && (
+                <div 
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="editor-modal-title"
+                    className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex flex-col justify-between overflow-hidden animate-in fade-in duration-150"
+                >
+                    {/* Modal Header */}
+                    <div className="bg-[#333B5E] text-white px-6 py-4 flex items-center justify-between border-b border-white/10 shrink-0">
                         <div>
-                            <h2 className="text-lg font-bold">
+                            <h2 id="editor-modal-title" className="text-lg font-bold text-white">
                                 {editingPost ? 'Ubah Artikel' : 'Tulis Artikel Baru'}
                             </h2>
-                            <p className="text-xs text-[#A9A8C4]">
-                                Tampilan editor penuh untuk kenyamanan menulis konten Markdown.
+                            <p className="text-xs text-[#A9B0CC]">
+                                Editor Markdown TOAST UI dengan tinjauan langsung.
                             </p>
                         </div>
                         <button
-                            onClick={() => setModalOpen(false)}
-                            className="p-2 rounded-full hover:bg-white/10 text-white transition cursor-pointer"
+                            type="button"
+                            onClick={() => setIsEditorModalOpen(false)}
+                            aria-label="Tutup editor"
+                            className="p-2 rounded-full text-[#A9B0CC] hover:text-white hover:bg-[#3A4366] transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                         >
-                            <X className="w-6 h-6" />
+                            <X className="w-5 h-5" />
                         </button>
                     </div>
 
-                    {/* Modal Body Form */}
-                    <div className="flex-1 bg-white overflow-y-auto p-6 sm:p-10 max-w-5xl mx-auto w-full">
-                        <form className="space-y-6">
+                    {/* Modal Body */}
+                    <div className="flex-1 bg-[#2B3252] overflow-y-auto p-4 sm:p-8 max-w-4xl mx-auto w-full">
+                        <form className="space-y-5">
                             <div>
-                                <label className="block text-xs font-bold text-[#14122B] mb-1.5">Judul Artikel</label>
+                                <label className="block text-xs font-bold uppercase tracking-wider text-[#A9B0CC] mb-2">
+                                    Judul Artikel
+                                </label>
                                 <input
                                     type="text"
                                     value={data.title}
                                     onChange={(e) => setData('title', e.target.value)}
-                                    placeholder="Masukkan judul artikel yang menarik..."
-                                    className="w-full text-lg font-bold px-4 py-3 rounded-xl border border-[#E8E7F0] focus:outline-none focus:border-[#5B4FE9] focus:ring-2 focus:ring-[#5B4FE9]/20 transition"
+                                    placeholder="Masukkan judul artikel yang memikat..."
+                                    className="w-full bg-[#333B5E] text-white text-base font-semibold px-4 py-3 rounded-[16px] border border-transparent focus:border-[#5873E0] focus:outline-none focus:ring-2 focus:ring-[#5873E0]/30 transition min-h-[48px]"
                                 />
-                                {errors.title && <p className="mt-1 text-xs text-red-600">{errors.title}</p>}
+                                {errors.title && <p className="mt-1 text-xs text-red-400">{errors.title}</p>}
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-bold text-[#14122B] mb-1.5">Kategori</label>
+                                    <label className="block text-xs font-bold uppercase tracking-wider text-[#A9B0CC] mb-2">
+                                        Kategori
+                                    </label>
                                     <select
                                         value={data.category}
                                         onChange={(e) => setData('category', e.target.value)}
-                                        className="w-full px-4 py-2.5 rounded-xl border border-[#E8E7F0] text-sm focus:outline-none focus:border-[#5B4FE9] transition"
+                                        className="w-full bg-[#333B5E] text-white text-sm font-medium px-4 py-3 rounded-[16px] border border-transparent focus:border-[#5873E0] focus:outline-none focus:ring-2 focus:ring-[#5873E0]/30 transition min-h-[48px]"
                                     >
-                                        {categories?.map((cat) => (
-                                            <option key={cat} value={cat}>
+                                        {categories.map((cat) => (
+                                            <option key={cat} value={cat} className="bg-[#333B5E] text-white">
                                                 {cat}
                                             </option>
                                         ))}
                                     </select>
-                                    {errors.category && <p className="mt-1 text-xs text-red-600">{errors.category}</p>}
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-bold text-[#14122B] mb-1.5">Ringkasan (Excerpt)</label>
+                                    <label className="block text-xs font-bold uppercase tracking-wider text-[#A9B0CC] mb-2">
+                                        Ringkasan (Excerpt)
+                                    </label>
                                     <input
                                         type="text"
                                         value={data.excerpt}
                                         onChange={(e) => setData('excerpt', e.target.value)}
                                         placeholder="Ringkasan 1-2 kalimat (opsional)..."
-                                        className="w-full px-4 py-2.5 rounded-xl border border-[#E8E7F0] text-sm focus:outline-none focus:border-[#5B4FE9] transition"
+                                        className="w-full bg-[#333B5E] text-white text-sm px-4 py-3 rounded-[16px] border border-transparent focus:border-[#5873E0] focus:outline-none focus:ring-2 focus:ring-[#5873E0]/30 transition min-h-[48px]"
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-xs font-bold text-[#14122B] mb-1.5">
-                                    Konten Artikel (TOAST UI Editor - Markdown)
+                                <label className="block text-xs font-bold uppercase tracking-wider text-[#A9B0CC] mb-2">
+                                    Konten Artikel (Markdown)
                                 </label>
-                                <div ref={editorContainerRef} className="rounded-xl border border-[#E8E7F0] overflow-hidden" />
-                                {errors.content && <p className="mt-1 text-xs text-red-600">{errors.content}</p>}
+                                <div 
+                                    ref={editorContainerRef} 
+                                    className="rounded-[16px] overflow-hidden border border-white/10 bg-white" 
+                                />
+                                {errors.content && <p className="mt-1 text-xs text-red-400">{errors.content}</p>}
                             </div>
                         </form>
                     </div>
 
-                    {/* Contrasting Footer with Actions on the Right */}
-                    <div className="bg-[#14122B] border-t border-white/10 px-6 py-4 flex items-center justify-between shrink-0">
+                    {/* Modal Footer */}
+                    <div className="bg-[#333B5E] border-t border-white/10 px-6 py-4 flex items-center justify-between shrink-0">
                         <button
                             type="button"
-                            onClick={() => setModalOpen(false)}
-                            className="px-5 py-2.5 rounded-xl text-xs font-semibold text-[#A9A8C4] hover:text-white transition cursor-pointer"
+                            onClick={() => setIsEditorModalOpen(false)}
+                            className="px-5 py-2.5 rounded-full text-xs font-semibold text-[#A9B0CC] hover:text-white hover:bg-[#3A4366] transition min-h-[44px]"
                         >
                             Batal
                         </button>
-
                         <div className="flex items-center gap-3">
                             <button
                                 type="button"
                                 disabled={processing}
-                                onClick={(e) => handleFormSubmit(e, false)}
-                                className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition cursor-pointer"
+                                onClick={(e) => handleSavePost(e, false)}
+                                className="px-5 py-2.5 rounded-full text-xs font-semibold bg-[#3A4366] hover:bg-[#434d75] text-white transition min-h-[44px]"
                             >
-                                Simpan sebagai Draf
+                                Simpan Draf
                             </button>
-
                             <button
                                 type="button"
                                 disabled={processing}
-                                onClick={(e) => handleFormSubmit(e, true)}
-                                className="px-6 py-2.5 rounded-xl bg-[#5B4FE9] hover:bg-[#4A3FD1] text-white text-xs font-bold shadow-md transition cursor-pointer"
+                                onClick={(e) => handleSavePost(e, true)}
+                                className="px-6 py-2.5 rounded-full text-xs font-bold bg-[#5873E0] hover:bg-[#4762cf] text-white transition min-h-[44px] shadow-sm"
                             >
                                 Publikasikan Sekarang
                             </button>
@@ -596,172 +538,166 @@ export default function PostIndex({ posts, stats, categories, filters }) {
 
             {/* AI GENERATOR MODAL */}
             {aiModalOpen && (
-                <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-                    <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-[#E8E7F0] max-h-[90vh] overflow-y-auto">
-                        <div className="flex items-center justify-between pb-4 border-b border-[#E8E7F0]">
-                            <div className="flex items-center gap-2 text-[#5B4FE9]">
-                                <Sparkles className="w-5 h-5" />
-                                <h3 className="text-base font-bold text-[#14122B]">AI Article Generator (OpenAI)</h3>
+                <div 
+                    role="dialog"
+                    aria-modal="true"
+                    className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4"
+                >
+                    <div className="bg-[#333B5E] rounded-[20px] max-w-2xl w-full p-6 text-white space-y-5 border border-white/10">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2.5">
+                                <Sparkles className="w-5 h-5 text-[#5873E0]" />
+                                <h2 className="text-base font-bold">Generator Artikel AI</h2>
                             </div>
                             <button
-                                onClick={() => {
-                                    setAiModalOpen(false);
-                                    setAiResults([]);
-                                }}
-                                className="p-1 rounded-lg text-[#A3A2B5] hover:text-[#14122B]"
+                                type="button"
+                                onClick={() => setAiModalOpen(false)}
+                                className="text-[#A9B0CC] hover:text-white p-1 rounded-full min-h-[44px] min-w-[44px] flex items-center justify-center"
                             >
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
 
-                        {aiResults.length === 0 ? (
-                            <form onSubmit={handleGenerateAi} className="mt-5 space-y-4">
+                        <form onSubmit={handleGenerateAi} className="space-y-4">
+                            <div>
+                                <label className="block text-xs font-medium text-[#A9B0CC] mb-1">Topik Utama</label>
+                                <input
+                                    type="text"
+                                    required
+                                    value={aiForm.topic}
+                                    onChange={(e) => setAiForm({ ...aiForm, topic: e.target.value })}
+                                    placeholder="Contoh: Manfaat Clean Architecture di Laravel"
+                                    className="w-full bg-[#2B3252] text-white rounded-[14px] px-4 py-2.5 text-sm border border-transparent focus:border-[#5873E0] focus:outline-none"
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="block text-xs font-bold text-[#14122B] mb-1">Topik Artikel</label>
+                                    <label className="block text-xs font-medium text-[#A9B0CC] mb-1">Kategori</label>
+                                    <select
+                                        value={aiForm.category}
+                                        onChange={(e) => setAiForm({ ...aiForm, category: e.target.value })}
+                                        className="w-full bg-[#2B3252] text-white rounded-[14px] px-4 py-2.5 text-sm border border-transparent focus:border-[#5873E0] focus:outline-none"
+                                    >
+                                        {categories.map((c) => (
+                                            <option key={c} value={c}>{c}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-medium text-[#A9B0CC] mb-1">Jumlah Draf</label>
                                     <input
-                                        type="text"
-                                        required
-                                        value={aiForm.topic}
-                                        onChange={(e) => setAiForm({ ...aiForm, topic: e.target.value })}
-                                        placeholder="Contoh: Mengapa Clean Architecture penting untuk software modern"
-                                        className="w-full px-3.5 py-2.5 rounded-xl border border-[#E8E7F0] text-sm focus:outline-none focus:border-[#5B4FE9]"
+                                        type="number"
+                                        min="1"
+                                        max="5"
+                                        value={aiForm.count}
+                                        onChange={(e) => setAiForm({ ...aiForm, count: parseInt(e.target.value) || 1 })}
+                                        className="w-full bg-[#2B3252] text-white rounded-[14px] px-4 py-2.5 text-sm border border-transparent focus:border-[#5873E0] focus:outline-none"
                                     />
                                 </div>
+                            </div>
 
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-xs font-bold text-[#14122B] mb-1">Kategori</label>
-                                        <select
-                                            value={aiForm.category}
-                                            onChange={(e) => setAiForm({ ...aiForm, category: e.target.value })}
-                                            className="w-full px-3.5 py-2.5 rounded-xl border border-[#E8E7F0] text-sm focus:outline-none focus:border-[#5B4FE9]"
-                                        >
-                                            {categories?.map((cat) => (
-                                                <option key={cat} value={cat}>
-                                                    {cat}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
+                            <div className="flex justify-end gap-3 pt-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setAiModalOpen(false)}
+                                    className="px-5 py-2 rounded-full text-xs font-semibold text-[#A9B0CC] hover:text-white"
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={aiLoading}
+                                    className="px-6 py-2 rounded-full text-xs font-bold bg-[#5873E0] hover:bg-[#4762cf] text-white min-h-[40px] flex items-center gap-2"
+                                >
+                                    {aiLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                                    <span>{aiLoading ? 'Memproses AI...' : 'Generate Artikel'}</span>
+                                </button>
+                            </div>
+                        </form>
 
-                                    <div>
-                                        <label className="block text-xs font-bold text-[#14122B] mb-1">
-                                            Jumlah Artikel (type="number")
-                                        </label>
-                                        <input
-                                            type="number"
-                                            min="1"
-                                            max="5"
-                                            required
-                                            value={aiForm.count}
-                                            onChange={(e) => setAiForm({ ...aiForm, count: Number(e.target.value) })}
-                                            className="w-full px-3.5 py-2.5 rounded-xl border border-[#E8E7F0] text-sm focus:outline-none focus:border-[#5B4FE9]"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="pt-4 flex justify-end gap-2">
-                                    <button
-                                        type="button"
-                                        onClick={() => setAiModalOpen(false)}
-                                        className="px-4 py-2 rounded-xl text-xs font-semibold text-[#6B6A80] hover:bg-[#F1F0F7]"
-                                    >
-                                        Batal
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        disabled={aiLoading}
-                                        className="px-5 py-2 rounded-xl bg-[#5B4FE9] hover:bg-[#4A3FD1] text-white text-xs font-bold flex items-center gap-2 disabled:opacity-50"
-                                    >
-                                        {aiLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                                        <span>Generate Draf Artikel</span>
-                                    </button>
-                                </div>
-                            </form>
-                        ) : (
-                            <div className="mt-5 space-y-4">
-                                <p className="text-xs text-[#6B6A80]">
-                                    Berhasil menghasilkan {aiResults.length} draf artikel. Periksa hasil sebelum menyimpannya ke draf:
-                                </p>
-                                <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
+                        {aiResults.length > 0 && (
+                            <div className="border-t border-white/10 pt-4 space-y-3">
+                                <h3 className="text-xs font-bold uppercase text-[#A9B0CC]">Hasil Generate AI ({aiResults.length})</h3>
+                                <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
                                     {aiResults.map((item, idx) => (
-                                        <div key={idx} className="p-3.5 rounded-xl border border-[#E8E7F0] bg-[#FAFAFD]">
-                                            <p className="font-bold text-sm text-[#14122B]">{item.title}</p>
-                                            <p className="text-xs text-[#6B6A80] mt-1 line-clamp-2">{item.excerpt}</p>
+                                        <div key={idx} className="bg-[#2B3252] p-3 rounded-[12px] space-y-1">
+                                            <p className="text-sm font-bold text-white">{item.title}</p>
+                                            <p className="text-xs text-[#A9B0CC] line-clamp-2">{item.excerpt}</p>
                                         </div>
                                     ))}
                                 </div>
-                                <div className="pt-4 flex justify-end gap-2 border-t border-[#E8E7F0]">
-                                    <button
-                                        type="button"
-                                        onClick={() => setAiResults([])}
-                                        className="px-4 py-2 rounded-xl text-xs font-semibold text-[#6B6A80] hover:bg-[#F1F0F7]"
-                                    >
-                                        Ulangi
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={handleSaveAiBatch}
-                                        className="px-5 py-2 rounded-xl bg-[#5B4FE9] hover:bg-[#4A3FD1] text-white text-xs font-bold"
-                                    >
-                                        Simpan Semua Batch sebagai Draf
-                                    </button>
-                                </div>
+                                <button
+                                    type="button"
+                                    onClick={handleSaveAiBatch}
+                                    className="w-full py-2.5 rounded-full bg-[#4ADE80] hover:bg-[#3ec470] text-[#2B3252] font-bold text-xs"
+                                >
+                                    Simpan Semua Draf AI
+                                </button>
                             </div>
                         )}
                     </div>
                 </div>
             )}
 
-            {/* EXCEL IMPORT MODAL */}
+            {/* IMPORT EXCEL MODAL */}
             {importModalOpen && (
-                <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-                    <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-[#E8E7F0]">
-                        <div className="flex items-center justify-between pb-3 border-b border-[#E8E7F0]">
-                            <h3 className="text-base font-bold text-[#14122B]">Impor Artikel dari Excel</h3>
-                            <button onClick={() => setImportModalOpen(false)} className="p-1 text-[#A3A2B5] hover:text-[#14122B]">
+                <div 
+                    role="dialog"
+                    aria-modal="true"
+                    className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4"
+                >
+                    <div className="bg-[#333B5E] rounded-[20px] max-w-md w-full p-6 text-white space-y-5 border border-white/10">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2.5">
+                                <Upload className="w-5 h-5 text-[#5873E0]" />
+                                <h2 className="text-base font-bold">Impor Artikel dari Excel</h2>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setImportModalOpen(false)}
+                                className="text-[#A9B0CC] hover:text-white p-1 rounded-full min-h-[44px] min-w-[44px] flex items-center justify-center"
+                            >
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
 
-                        <form onSubmit={handleImportSubmit} className="mt-4 space-y-4">
-                            <div>
-                                <label className="block text-xs font-bold text-[#14122B] mb-2">Pilih Berkas Excel (.xlsx, .xls)</label>
+                        <form onSubmit={handleImportSubmit} className="space-y-4">
+                            <div className="border-2 border-dashed border-[#3A4366] rounded-[16px] p-6 text-center space-y-2 hover:border-[#5873E0] transition-colors">
+                                <Upload className="w-8 h-8 text-[#A9B0CC] mx-auto" />
+                                <p className="text-xs text-[#A9B0CC]">
+                                    Pilih file Excel (.xlsx / .xls)
+                                </p>
                                 <input
                                     type="file"
-                                    accept=".xlsx,.xls"
+                                    accept=".xlsx, .xls"
                                     required
                                     onChange={(e) => setImportFile(e.target.files[0])}
-                                    className="w-full text-xs text-[#6B6A80] file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#E9E7FD] file:text-[#5B4FE9] hover:file:bg-[#F4F3FF] cursor-pointer"
+                                    className="block w-full text-xs text-[#A9B0CC] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#5873E0] file:text-white cursor-pointer"
                                 />
                             </div>
 
-                            <p className="text-[11px] text-[#A3A2B5] leading-relaxed">
-                                Pastikan berkas Excel memiliki baris header dengan kolom Judul/Title dan Konten/Content. Artikel akan diimpor sebagai Draf milik Anda.
-                            </p>
-
-                            <div className="pt-3 flex justify-end gap-2 border-t border-[#E8E7F0]">
+                            <div className="flex justify-end gap-3 pt-2">
                                 <button
                                     type="button"
                                     onClick={() => setImportModalOpen(false)}
-                                    className="px-4 py-2 rounded-xl text-xs font-semibold text-[#6B6A80] hover:bg-[#F1F0F7]"
+                                    className="px-5 py-2 rounded-full text-xs font-semibold text-[#A9B0CC] hover:text-white"
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
-                                    disabled={importing}
-                                    className="px-5 py-2 rounded-xl bg-[#5B4FE9] hover:bg-[#4A3FD1] text-white text-xs font-bold flex items-center gap-2"
+                                    disabled={importing || !importFile}
+                                    className="px-6 py-2 rounded-full text-xs font-bold bg-[#5873E0] hover:bg-[#4762cf] text-white min-h-[40px] flex items-center gap-2 disabled:opacity-50"
                                 >
                                     {importing && <Loader2 className="w-4 h-4 animate-spin" />}
-                                    <span>Mulai Impor</span>
+                                    <span>{importing ? 'Mengimpor...' : 'Mulai Impor'}</span>
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
             )}
-        </AppLayout>
+        </div>
     );
 }
-
