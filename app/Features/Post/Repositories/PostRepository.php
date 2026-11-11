@@ -108,4 +108,3 @@ class PostRepository implements PostRepositoryInterface
             ->withQueryString();
     }
 }
-

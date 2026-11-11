@@ -112,6 +112,7 @@ class PostExcelService
             if (empty($title) || empty($content)) {
                 $failed++;
                 $errors[] = "Baris {$rowNumber}: Judul dan Konten wajib diisi.";
+
                 continue;
             }
 
@@ -152,4 +153,3 @@ class PostExcelService
         ];
     }
 }
-

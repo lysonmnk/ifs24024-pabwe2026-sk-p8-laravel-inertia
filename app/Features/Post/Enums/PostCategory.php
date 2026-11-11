@@ -16,4 +16,3 @@ enum PostCategory: string
         return array_column(self::cases(), 'value');
     }
 }
-

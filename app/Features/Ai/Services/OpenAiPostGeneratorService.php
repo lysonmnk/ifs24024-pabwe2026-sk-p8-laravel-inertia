@@ -93,4 +93,3 @@ class OpenAiPostGeneratorService implements AiClientInterface
         return $items;
     }
 }
-

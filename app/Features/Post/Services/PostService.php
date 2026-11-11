@@ -103,6 +103,7 @@ class PostService
     {
         if ($post->cover_image_path) {
             Storage::disk('public')->delete($post->cover_image_path);
+
             return $this->postRepository->update($post, ['cover_image_path' => null]);
         }
 
@@ -132,4 +133,3 @@ class PostService
         return $slug;
     }
 }
-

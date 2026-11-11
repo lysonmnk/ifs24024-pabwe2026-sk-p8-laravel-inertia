@@ -59,4 +59,3 @@ interface PostRepositoryInterface
      */
     public function getAllPaginatedForAdmin(?int $userId = null, ?string $search = null, int $perPage = 15): LengthAwarePaginator;
 }
-

@@ -11,4 +11,3 @@ interface AiClientInterface
      */
     public function generateArticles(string $topic, string $category, int $count = 1): array;
 }
-

@@ -207,4 +207,3 @@ class PostController extends Controller
         return redirect()->route('dashboard.posts.index')->with('success', "Berhasil menyimpan {$count} artikel draf hasil AI.");
     }
 }
-

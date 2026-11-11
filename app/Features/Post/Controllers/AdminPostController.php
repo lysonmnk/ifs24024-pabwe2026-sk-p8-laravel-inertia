@@ -64,4 +64,3 @@ class AdminPostController extends Controller
         return $this->excelService->export($posts, 'artikel-user-'.$user->id.'-'.now()->format('Ymd-His').'.xlsx');
     }
 }
-

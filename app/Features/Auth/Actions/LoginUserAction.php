@@ -29,4 +29,3 @@ class LoginUserAction
         return Auth::user();
     }
 }
-
