@@ -113,6 +113,7 @@ pipeline {
                     set -e
 
                     echo "=== Installing Frontend Dependencies ==="
+                    # package-lock.json may not exist yet; prefer reproducible install when available
                     if [ -f package-lock.json ]; then
                         npm ci --ignore-scripts
                     else
@@ -160,6 +161,9 @@ pipeline {
 
                     echo "=== Preparing Laravel Testing Environment ==="
 
+                    mkdir -p storage/framework/views storage/framework/cache/data storage/framework/sessions storage/framework/testing storage/logs bootstrap/cache
+                    chmod -R 775 storage bootstrap/cache || true
+
                     if [ ! -f .env ]; then
                         cp .env.example .env
                     fi
@@ -202,6 +206,8 @@ pipeline {
                             exit(1);
                         }
 
+                        // PHPUnit clover project metrics: statements/methods/elements
+                        // (tidak selalu ada coveredclasses — jangan dipakai sebagai gate)
                         $statements = (int) $metrics["statements"];
                         $coveredStatements = (int) $metrics["coveredstatements"];
                         $methods = (int) $metrics["methods"];
@@ -309,6 +315,9 @@ pipeline {
 
             post {
                 always {
+                    // failOnError must be false: otherwise Warnings NG can mark the
+                    // whole build FAILURE while later stages still run (all green, badge red).
+                    // Build failure on HIGH/CRITICAL comes from trivy --exit-code 1 above.
                     recordIssues(
                         enabledForFailure: true,
                         failOnError: false,
@@ -346,6 +355,9 @@ pipeline {
 
                     rm -f latest-app.zip
 
+                    # vendor & node_modules sengaja tidak ikut zip
+                    # (diinstal ulang di server deploy via composer/npm)
+                    # .env.example tetap ikut; .env lokal tidak
                     zip -r latest-app.zip . \
                         -x "vendor/*" \
                         -x "node_modules/*" \
@@ -396,7 +408,10 @@ pipeline {
 
             steps {
 
-                // 1. Archive artifact to Jenkins
+                // ========================================================
+                // 1. ARCHIVE ARTIFACT KE JENKINS
+                // ========================================================
+
                 archiveArtifacts(
                     artifacts: 'latest-app.zip',
                     fingerprint: true,
@@ -405,7 +420,10 @@ pipeline {
 
                 script {
 
-                    // 2. Build application identity
+                    // ====================================================
+                    // 2. BUAT IDENTITAS APPLICATION
+                    // ====================================================
+
                     def appName = env.JOB_NAME
                         .replaceAll('[^a-zA-Z0-9._-]', '-')
                         .replaceAll('-+', '-')
@@ -416,7 +434,10 @@ pipeline {
                     echo "Application Name: ${appName}"
                     echo "Build ID: ${buildId}"
 
-                    // 3. Copy to userContent
+                    // ====================================================
+                    // 3. COPY KE USER CONTENT
+                    // ====================================================
+
                     sh """
                         set -e
 
@@ -439,7 +460,10 @@ pipeline {
                             "/var/jenkins_home/userContent/applications/${appName}/${buildId}/latest-app.zip"
                     """
 
-                    // 4. Create public artifact URL
+                    // ====================================================
+                    // 4. BUAT PUBLIC ARTIFACT URL
+                    // ====================================================
+
                     def jenkinsBaseUrl = env.BUILD_URL
                         .substring(0, env.BUILD_URL.indexOf('/job/'))
                         .replace('localhost', 'host.docker.internal')
@@ -479,7 +503,10 @@ pipeline {
                     echo "Artifact URL:"
                     echo "${env.ARTIFACT_URL}"
 
-                    // 1. Request redeployment
+                    // ==================================================
+                    // 1. REQUEST REDEPLOYMENT
+                    // ==================================================
+
                     echo ""
                     echo "=== Request Redeployment ==="
 
@@ -503,7 +530,10 @@ pipeline {
                     echo "Redeploy Response:"
                     echo redeployResponse
 
-                    // 2. Polling deployment progress
+                    // ==================================================
+                    // 2. POLLING DEPLOYMENT PROGRESS
+                    // ==================================================
+
                     echo ""
                     echo "=== Waiting For Deployment ==="
 
@@ -546,6 +576,10 @@ pipeline {
                         echo "Progress Response:"
                         echo progressResponse
 
+                        // ==================================================
+                        // PARSE JSON
+                        // ==================================================
+
                         def json = readJSON text: progressResponse
 
                         deploymentStatus = json?.data?.status
@@ -560,15 +594,26 @@ pipeline {
 
                         echo "Deployment Status: ${deploymentStatus}"
 
+                        // ==================================================
+                        // SUCCESS
+                        // ==================================================
+
                         if (deploymentStatus == 'SUCCESS') {
+
                             echo ""
                             echo "=========================================="
                             echo "       ✅ DEPLOYMENT SUCCESS"
                             echo "=========================================="
+
                             break
                         }
 
+                        // ==================================================
+                        // FAIL
+                        // ==================================================
+
                         if (deploymentStatus == 'FAIL') {
+
                             echo ""
                             echo "=========================================="
                             echo "       ❌ DEPLOYMENT FAILED"
@@ -588,6 +633,10 @@ pipeline {
                                 "${WEBSITE_ID}"
                             )
                         }
+
+                        // ==================================================
+                        // OTHER STATUS
+                        // ==================================================
 
                         echo "Deployment masih berjalan..."
                     }
