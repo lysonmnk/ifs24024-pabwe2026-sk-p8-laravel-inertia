@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
     // Member Dashboard Routes
-    Route::middleware('role:Member')->prefix('dashboard')->name('dashboard.')->group(function () {
+    Route::middleware('role:Member,Admin')->prefix('dashboard')->name('dashboard.')->group(function () {
         Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
         Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
         Route::get('/posts/export', [PostController::class, 'export'])->name('posts.export');
