@@ -28,7 +28,8 @@ COPY . .
 RUN cp .env.example .env && \
     sed -i 's/DB_CONNECTION=pgsql/DB_CONNECTION=sqlite/g' .env && \
     sed -i 's/APP_ENV=local/APP_ENV=production/g' .env && \
-    sed -i 's/APP_DEBUG=true/APP_DEBUG=false/g' .env
+    sed -i 's/APP_DEBUG=true/APP_DEBUG=false/g' .env && \
+    sed -i 's|APP_URL=http://localhost|APP_URL=https://ifs24024-pabwe2026-sk-p8-laravel-inertia.onrender.com|g' .env
 
 # Install Composer dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
