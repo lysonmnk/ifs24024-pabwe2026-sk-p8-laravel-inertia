@@ -1,8 +1,10 @@
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { BookOpen, ArrowRight, Lock, Eye, EyeOff, ShieldCheck, Zap, CheckCircle2, AtSign, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Login() {
+    const pageProps = usePage()?.props || {};
+    const csrfToken = pageProps.csrf_token;
     const [showPassword, setShowPassword] = useState(false);
 
     const { data, setData, post, processing, errors, reset, transform } = useForm({
@@ -11,24 +13,18 @@ export default function Login() {
         remember: true,
     });
 
-    transform((formData) => {
-        let email = (formData.email || '').trim();
-        if (email.toLowerCase() === 'admin') {
-            email = 'admin@example.com';
-        } else if (email.toLowerCase() === 'user' || email.toLowerCase() === 'member') {
-            email = 'user@example.com';
-        }
-        return {
-            ...formData,
-            email,
-        };
-    });
+    const combinedErrors = { ...errors, ...pageProps.errors };
 
     const submit = (e) => {
-        e.preventDefault();
-        post('/login', {
-            onFinish: () => reset('password'),
-        });
+        const usernameEl = document.getElementById('login-username');
+        if (usernameEl) {
+            let val = (usernameEl.value || '').trim();
+            if (val.toLowerCase() === 'admin') {
+                usernameEl.value = 'admin@example.com';
+            } else if (val.toLowerCase() === 'user' || val.toLowerCase() === 'member') {
+                usernameEl.value = 'user@example.com';
+            }
+        }
     };
 
     const handleQuickFill = (roleEmail) => {
@@ -135,7 +131,7 @@ export default function Login() {
 
                     {/* Form Login */}
                     <form action="/login" method="POST" onSubmit={submit} className="space-y-4">
-                        <input type="hidden" name="_token" value={typeof document !== 'undefined' ? document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '' : ''} />
+                        <input type="hidden" name="_token" value={csrfToken || (typeof document !== 'undefined' ? document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') : '') || ''} />
                         {/* Email Field */}
                         <div className="space-y-1.5">
                             <label htmlFor="login-username" className="block text-xs font-semibold text-[#8F9BB7]">
@@ -158,7 +154,9 @@ export default function Login() {
                                     className="w-full bg-[#121526] text-white text-xs pl-10 pr-4 py-3 rounded-full border border-white/10 focus:border-[#4E6EF2] focus:outline-none focus:ring-2 focus:ring-[#4E6EF2]/20 transition"
                                 />
                             </div>
-                            {errors.email && <p className="text-[11px] text-red-400 pl-2">{errors.email}</p>}
+                            {(combinedErrors.email || errors.email) && (
+                                <p className="text-[11px] text-red-400 pl-2">{combinedErrors.email || errors.email}</p>
+                            )}
                         </div>
 
                         {/* Password Field */}
@@ -195,7 +193,9 @@ export default function Login() {
                                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                             </div>
-                            {errors.password && <p className="text-[11px] text-red-400 pl-2">{errors.password}</p>}
+                            {(combinedErrors.password || errors.password) && (
+                                <p className="text-[11px] text-red-400 pl-2">{combinedErrors.password || errors.password}</p>
+                            )}
                         </div>
 
                         {/* Remember Me */}
