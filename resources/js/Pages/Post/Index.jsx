@@ -435,7 +435,7 @@ export default function MemberDashboard(props) {
                             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
                                 Halo, {displayMemberName}! 👋
                             </h1>
-                            <p className="text-white/85 text-xs sm:text-sm leading-relaxed font-normal">
+                            <p className="text-white text-xs sm:text-sm leading-relaxed font-normal">
                                 Kelola tulisan Anda atau buat artikel baru hari ini. Pastikan konten tetap relevan, teroptimasi SEO, dan tersampaikan kepada audiens Anda.
                             </p>
                             <div className="pt-2">
@@ -449,14 +449,14 @@ export default function MemberDashboard(props) {
                             </div>
                         </div>
 
-                        {/* Kartu Kanan Banner Transparan */}
-                        <div className="bg-white/15 backdrop-blur-md border border-white/20 rounded-[18px] p-4 flex items-center gap-3 shrink-0 shadow-sm z-10">
-                            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-xl shadow-xs">
+                        {/* Kartu Kanan Banner Solid High Contrast */}
+                        <div className="bg-[#181C2E] border border-white/10 rounded-[18px] p-4 flex items-center gap-3 shrink-0 shadow-md z-10">
+                            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-xl shadow-xs">
                                 ✍️
                             </div>
                             <div className="text-xs">
                                 <p className="font-bold text-white">Editor Aktif</p>
-                                <p className="text-white/80 text-xs">{draftCount} Draft Tersimpan</p>
+                                <p className="text-[#CBD5E1] text-xs font-medium">{draftCount} Draft Tersimpan</p>
                             </div>
                         </div>
                     </div>
@@ -633,7 +633,7 @@ export default function MemberDashboard(props) {
                         {/* Header Panel */}
                         <div className="flex items-center justify-between">
                             <div>
-                                <h3 className="text-sm font-bold text-white">Aksi Cepat</h3>
+                                <h2 className="text-sm font-bold text-white">Aksi Cepat</h2>
                                 <p className="text-xs text-[#CBD5E1]">Pintasan produktivitas</p>
                             </div>
                             <span className="px-2 py-0.5 rounded-full bg-[#1A1E33] text-xs font-bold text-[#CBD5E1]">
@@ -729,14 +729,14 @@ export default function MemberDashboard(props) {
             {deleteModalPost && (
                 <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
                     <div className="bg-[#242A45] rounded-[20px] max-w-sm w-full p-6 text-white space-y-4 border border-white/10">
-                        <h3 className="text-base font-bold">Hapus Artikel</h3>
-                        <p className="text-xs text-[#8F9BB7]">
+                        <h2 className="text-base font-bold">Hapus Artikel</h2>
+                        <p className="text-xs text-[#CBD5E1]">
                             Apakah Anda yakin ingin menghapus artikel <span className="text-white font-bold">"{deleteModalPost.title}"</span>? Tindakan ini tidak dapat dibatalkan.
                         </p>
                         <div className="flex justify-end gap-2.5 pt-2">
                             <button
                                 onClick={() => setDeleteModalPost(null)}
-                                className="px-4 py-2 rounded-full text-xs font-semibold text-[#8F9BB7] hover:text-white"
+                                className="px-4 py-2 rounded-full text-xs font-semibold text-[#CBD5E1] hover:text-white"
                             >
                                 Batal
                             </button>
@@ -845,17 +845,17 @@ export default function MemberDashboard(props) {
                     <div className="bg-[#242A45] rounded-[20px] max-w-lg w-full p-6 text-white space-y-4 border border-white/10">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                                <Sparkles className="w-5 h-5 text-[#4E6EF2]" />
-                                <h3 className="text-base font-bold">AI Assistant Generator</h3>
+                                <Sparkles className="w-5 h-5 text-[#3557EC]" />
+                                <h2 className="text-base font-bold">AI Assistant Generator</h2>
                             </div>
-                            <button onClick={() => setAiModalOpen(false)} className="text-[#8F9BB7] hover:text-white">
+                            <button aria-label="Tutup modal AI" onClick={() => setAiModalOpen(false)} className="text-[#CBD5E1] hover:text-white">
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
 
                         <form onSubmit={handleGenerateAi} className="space-y-3.5">
                             <div>
-                                <label className="block text-xs font-medium text-[#8F9BB7] mb-1">Topik Utama</label>
+                                <label className="block text-xs font-medium text-[#CBD5E1] mb-1">Topik Utama</label>
                                 <input
                                     type="text"
                                     required
@@ -932,22 +932,22 @@ export default function MemberDashboard(props) {
                 <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
                     <div className="bg-[#242A45] rounded-[20px] max-w-sm w-full p-6 text-white space-y-4 border border-white/10">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-sm font-bold">Impor Artikel Excel</h3>
-                            <button onClick={() => setImportModalOpen(false)} className="text-[#8F9BB7] hover:text-white">
+                            <h2 className="text-sm font-bold">Impor Artikel Excel</h2>
+                            <button aria-label="Tutup modal impor" onClick={() => setImportModalOpen(false)} className="text-[#CBD5E1] hover:text-white">
                                 <X className="w-4 h-4" />
                             </button>
                         </div>
 
                         <form onSubmit={handleImportSubmit} className="space-y-3">
-                            <div className="border border-dashed border-[#4E6EF2]/40 rounded-xl p-5 text-center space-y-2">
-                                <CloudUpload className="w-8 h-8 text-[#4E6EF2] mx-auto" />
-                                <p className="text-xs text-[#8F9BB7]">Pilih file Excel (.xlsx / .xls)</p>
+                            <div className="border border-dashed border-[#3557EC]/40 rounded-xl p-5 text-center space-y-2">
+                                <CloudUpload className="w-8 h-8 text-[#3557EC] mx-auto" />
+                                <p className="text-xs text-[#CBD5E1]">Pilih file Excel (.xlsx / .xls)</p>
                                 <input
                                     type="file"
                                     accept=".xlsx, .xls"
                                     required
                                     onChange={(e) => setImportFile(e.target.files[0])}
-                                    className="block w-full text-[11px] text-[#8F9BB7] file:mr-3 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:bg-[#4E6EF2] file:text-white cursor-pointer"
+                                    className="block w-full text-xs text-[#CBD5E1] file:mr-3 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:bg-[#3557EC] file:text-white cursor-pointer"
                                 />
                             </div>
 

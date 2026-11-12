@@ -108,7 +108,7 @@ export default function UserPostList({ targetUser, posts, filters }) {
                     ) : (
                         <div className="py-16 text-center">
                             <FileText className="w-12 h-12 text-[#52506B] mx-auto mb-3 opacity-40" />
-                            <h3 className="text-base font-bold text-[#14122B]">Pengguna ini belum memiliki artikel</h3>
+                            <h2 className="text-base font-bold text-[#14122B]">Pengguna ini belum memiliki artikel</h2>
                             <p className="text-xs text-[#6B6A80] mt-1">
                                 Belum ada karya tulis yang dibuat oleh {targetUser.name}.
                             </p>

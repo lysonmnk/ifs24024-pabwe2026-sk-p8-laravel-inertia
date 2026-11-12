@@ -169,7 +169,7 @@ export default function PostIndex({ articles, categories, filters }) {
                 ) : (
                     <div className="text-center py-20 bg-white rounded-2xl border border-[#E8E7F0] p-8">
                         <BookOpen className="w-12 h-12 text-[#52506B] mx-auto mb-4 opacity-50" />
-                        <h3 className="text-lg font-bold text-[#14122B]">Belum Ada Artikel Ditemukan</h3>
+                        <h2 className="text-lg font-bold text-[#14122B]">Belum Ada Artikel Ditemukan</h2>
                         <p className="mt-1 text-sm text-[#6B6A80] max-w-md mx-auto">
                             Tidak ada artikel yang cocok dengan filter atau pencarian Anda. Coba reset filter untuk melihat seluruh publikasi.
                         </p>

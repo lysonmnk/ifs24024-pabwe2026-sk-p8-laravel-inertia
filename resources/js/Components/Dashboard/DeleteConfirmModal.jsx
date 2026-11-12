@@ -28,9 +28,9 @@ export default function DeleteConfirmModal({ isOpen, post, onConfirm, onCancel, 
                         <div className="p-3 rounded-full bg-[#FBBF24]/20 text-[#FBBF24]" aria-hidden="true">
                             <AlertTriangle className="w-6 h-6" />
                         </div>
-                        <h3 id="delete-dialog-title" className="text-lg font-bold text-white">
+                        <h2 id="delete-dialog-title" className="text-lg font-bold text-white">
                             Hapus Artikel
-                        </h3>
+                        </h2>
                     </div>
                     <button
                         type="button"

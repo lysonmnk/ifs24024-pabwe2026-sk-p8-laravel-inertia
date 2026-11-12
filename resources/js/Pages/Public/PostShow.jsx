@@ -111,20 +111,20 @@ export default function PostShow({ article }) {
                 </article>
 
                 {/* Post Footer Call to Action */}
-                <div className="mt-12 bg-gradient-to-r from-[#5B4FE9] to-[#4A3FD1] rounded-2xl p-8 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-md">
+                <div className="mt-12 bg-gradient-to-r from-[#3557EC] to-[#2546DB] rounded-2xl p-8 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-md">
                     <div>
-                        <div className="inline-flex items-center gap-1.5 text-xs font-semibold bg-white/20 px-3 py-1 rounded-full mb-2">
+                        <div className="inline-flex items-center gap-1.5 text-xs font-semibold bg-black/25 px-3 py-1 rounded-full mb-2">
                             <Sparkles className="w-3.5 h-3.5" />
                             <span>Mulai Publikasikan Karyamu</span>
                         </div>
-                        <h3 className="text-xl font-bold">Tertarik Menulis Artikel Sendiri?</h3>
-                        <p className="text-sm text-white/80 mt-1 max-w-md">
+                        <h2 className="text-xl font-bold">Tertarik Menulis Artikel Sendiri?</h2>
+                        <p className="text-sm text-white/90 mt-1 max-w-md">
                             Daftar sebagai penulis, nikmati kemudahan Markdown Editor, integrasi AI, serta manajemen draf artikel mandiri.
                         </p>
                     </div>
                     <Link
                         href="/register"
-                        className="px-6 py-3 rounded-full bg-white text-[#5B4FE9] font-bold text-sm hover:bg-white/90 transition shadow-sm shrink-0"
+                        className="px-6 py-3 rounded-full bg-white text-[#1E3A8A] font-bold text-sm hover:bg-white/95 transition shadow-sm shrink-0"
                     >
                         Daftar Penulis Gratis
                     </Link>
