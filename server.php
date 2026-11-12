@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Laravel Server Router with Static Asset Caching
+ * Laravel Server Router with Static Asset Caching & Gzip Compression
  */
 
 $uri = urldecode(
@@ -11,10 +11,11 @@ $uri = urldecode(
 $publicPath = is_dir(__DIR__.'/public') ? __DIR__.'/public' : getcwd();
 $filePath = $publicPath.$uri;
 
-// Serve static assets with efficient cache control policy
+// Serve static assets with efficient cache control policy & gzip compression
 if ($uri !== '/' && file_exists($filePath) && !is_dir($filePath)) {
     if (str_starts_with($uri, '/build/') || str_starts_with($uri, '/storage/')) {
         header('Cache-Control: public, max-age=31536000, immutable');
+        header('Vary: Accept-Encoding');
         $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
         $mimeTypes = [
             'js' => 'application/javascript; charset=utf-8',
@@ -33,10 +34,28 @@ if ($uri !== '/' && file_exists($filePath) && !is_dir($filePath)) {
         if (isset($mimeTypes[$ext])) {
             header('Content-Type: '.$mimeTypes[$ext]);
         }
+
+        $compressable = in_array($ext, ['js', 'css', 'svg', 'json']);
+        $acceptsGzip = str_contains($_SERVER['HTTP_ACCEPT_ENCODING'] ?? '', 'gzip');
+
+        if ($compressable && $acceptsGzip && function_exists('gzencode')) {
+            $content = file_get_contents($filePath);
+            $gzipped = gzencode($content, 6);
+            header('Content-Encoding: gzip');
+            header('Content-Length: '.strlen($gzipped));
+            echo $gzipped;
+            exit;
+        }
+
         readfile($filePath);
         exit;
     }
     return false;
+}
+
+// Enable output compression for dynamic HTML pages as well
+if (function_exists('ob_gzhandler') && !ini_get('zlib.output_compression') && str_contains($_SERVER['HTTP_ACCEPT_ENCODING'] ?? '', 'gzip')) {
+    ob_start('ob_gzhandler');
 }
 
 require_once $publicPath.'/index.php';

@@ -29,7 +29,7 @@ export default function AppLayout({ children, title }) {
                         </Link>
 
                         {/* Desktop Navigation */}
-                        <nav className="hidden md:flex items-center gap-1">
+                        <nav aria-label="Navigasi Header Desktop" className="hidden md:flex items-center gap-1">
                             <Link
                                 href="/"
                                 className="px-3.5 py-2 rounded-full text-sm font-medium text-[#6B6A80] hover:text-[#14122B] hover:bg-[#F4F3FF] transition"
@@ -99,7 +99,7 @@ export default function AppLayout({ children, title }) {
                             <div className="flex items-center gap-2">
                                 <Link
                                     href="/login"
-                                    className="px-4 py-2 text-sm font-medium text-[#14122B] hover:text-[#5B4FE9] transition"
+                                    className="px-4 py-2 text-sm font-medium text-[#14122B] hover:text-[#3557EC] transition"
                                 >
                                     Masuk
                                 </Link>
@@ -128,7 +128,7 @@ export default function AppLayout({ children, title }) {
 
                 {/* Mobile Navigation Dropdown */}
                 {mobileMenuOpen && (
-                    <div className="md:hidden border-t border-[#E8E7F0] bg-white px-4 pt-3 pb-6 space-y-3">
+                    <nav aria-label="Navigasi Header Mobile" className="md:hidden border-t border-[#E8E7F0] bg-white px-4 pt-3 pb-6 space-y-3">
                         <Link
                             href="/"
                             className="block px-3 py-2 rounded-lg text-sm font-medium text-[#6B6A80] hover:bg-[#F4F3FF]"
@@ -183,7 +183,7 @@ export default function AppLayout({ children, title }) {
                                     href="/logout"
                                     method="post"
                                     as="button"
-                                    className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50"
+                                    className="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-red-700 hover:bg-red-50"
                                 >
                                     Keluar
                                 </Link>
@@ -198,13 +198,13 @@ export default function AppLayout({ children, title }) {
                                 </Link>
                                 <Link
                                     href="/register"
-                                    className="w-full py-2.5 text-center text-sm font-medium text-white bg-[#5B4FE9] rounded-xl hover:bg-[#4A3FD1]"
+                                    className="w-full py-2.5 text-center text-sm font-medium text-white bg-[#3557EC] rounded-xl hover:bg-[#2A4BD9]"
                                 >
                                     Daftar Penulis
                                 </Link>
                             </div>
                         )}
-                    </div>
+                    </nav>
                 )}
             </header>
 
