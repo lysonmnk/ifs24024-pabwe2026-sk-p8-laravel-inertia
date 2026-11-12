@@ -13,7 +13,7 @@ $filePath = $publicPath.$uri;
 
 // Serve static assets with efficient cache control policy & gzip compression
 if ($uri !== '/' && file_exists($filePath) && !is_dir($filePath)) {
-    if (str_starts_with($uri, '/build/') || str_starts_with($uri, '/storage/')) {
+    if (str_starts_with($uri, '/build/') || str_starts_with($uri, '/storage/') || $uri === '/favicon.ico') {
         header('Cache-Control: public, max-age=31536000, immutable');
         header('Vary: Accept-Encoding');
         $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
