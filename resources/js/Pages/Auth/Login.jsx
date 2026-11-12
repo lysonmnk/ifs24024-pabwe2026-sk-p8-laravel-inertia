@@ -135,6 +135,7 @@ export default function Login() {
 
                     {/* Form Login */}
                     <form action="/login" method="POST" onSubmit={submit} className="space-y-4">
+                        <input type="hidden" name="_token" value={typeof document !== 'undefined' ? document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '' : ''} />
                         {/* Email Field */}
                         <div className="space-y-1.5">
                             <label htmlFor="login-username" className="block text-xs font-semibold text-[#8F9BB7]">

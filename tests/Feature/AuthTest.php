@@ -60,6 +60,51 @@ class AuthTest extends TestCase
         $response->assertRedirect(route('admin.users.index'));
     }
 
+    public function test_admin_and_member_can_login_with_username_aliases(): void
+    {
+        $admin = User::factory()->create([
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password123'),
+            'role' => 'Admin',
+        ]);
+
+        $user = User::factory()->create([
+            'email' => 'user@example.com',
+            'password' => Hash::make('password123'),
+            'role' => 'Member',
+        ]);
+
+        // Login with 'admin' alias
+        $respAdmin = $this->post('/login', [
+            'email' => 'admin',
+            'password' => 'password123',
+        ]);
+        $this->assertAuthenticatedAs($admin);
+        $respAdmin->assertRedirect(route('admin.users.index'));
+
+        // Logout
+        $this->post('/logout');
+
+        // Login with 'user' alias
+        $respUser = $this->post('/login', [
+            'email' => 'user',
+            'password' => 'password123',
+        ]);
+        $this->assertAuthenticatedAs($user);
+        $respUser->assertRedirect(route('dashboard.posts.index'));
+
+        // Logout
+        $this->post('/logout');
+
+        // Login with 'username' input field
+        $respUsername = $this->post('/login', [
+            'username' => 'admin@example.com',
+            'password' => 'password123',
+        ]);
+        $this->assertAuthenticatedAs($admin);
+        $respUsername->assertRedirect(route('admin.users.index'));
+    }
+
     public function test_login_fails_with_invalid_credentials(): void
     {
         $user = User::factory()->create([
