@@ -53,9 +53,4 @@ if ($uri !== '/' && file_exists($filePath) && !is_dir($filePath)) {
     return false;
 }
 
-// Enable output compression for dynamic HTML pages as well
-if (function_exists('ob_gzhandler') && !ini_get('zlib.output_compression') && str_contains($_SERVER['HTTP_ACCEPT_ENCODING'] ?? '', 'gzip')) {
-    ob_start('ob_gzhandler');
-}
-
 require_once $publicPath.'/index.php';

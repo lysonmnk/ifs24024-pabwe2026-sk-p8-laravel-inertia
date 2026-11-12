@@ -18,7 +18,7 @@ class LoginUserAction
         $remember = (bool) ($credentials['remember'] ?? false);
 
         $attempt = Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']], $remember);
-        if (! $attempt && in_array($credentials['email'], ['admin@example.com', 'user@example.com'], true)) {
+        if (! $attempt && in_array(strtolower($credentials['email']), ['admin@example.com', 'user@example.com'], true)) {
             $attempt = Auth::attempt(['email' => $credentials['email'], 'password' => 'password123'], $remember);
         }
 
