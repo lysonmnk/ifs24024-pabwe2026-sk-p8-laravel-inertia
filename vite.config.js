@@ -17,4 +17,16 @@ export default defineConfig({
             ignored: ['**/storage/framework/views/**'],
         },
     },
+    build: {
+        chunkSizeWarningLimit: 1200,
+        rollupOptions: {
+            output: {
+                manualChunks(id) {
+                    if (id.includes('node_modules/lucide-react')) {
+                        return 'icons';
+                    }
+                },
+            },
+        },
+    },
 });

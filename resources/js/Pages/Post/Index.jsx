@@ -1,7 +1,5 @@
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { useState, useRef, useEffect } from 'react';
-import Editor from '@toast-ui/editor';
-import '@toast-ui/editor/dist/toastui-editor.css';
 import { 
     LayoutDashboard, 
     FileText, 
@@ -86,27 +84,35 @@ export default function MemberDashboard(props) {
         is_published: false,
     });
 
-    // Inisialisasi TOAST UI Editor
+    // Inisialisasi TOAST UI Editor secara lazy
     useEffect(() => {
+        let isMounted = true;
         if (isEditorModalOpen && editorContainerRef.current) {
-            editorContainerRef.current.innerHTML = '';
-            editorInstanceRef.current = new Editor({
-                el: editorContainerRef.current,
-                height: '380px',
-                initialEditType: 'markdown',
-                previewStyle: 'vertical',
-                initialValue: data.content || '',
-                events: {
-                    change: () => {
-                        if (editorInstanceRef.current) {
-                            setData('content', editorInstanceRef.current.getMarkdown());
-                        }
+            Promise.all([
+                import('@toast-ui/editor'),
+                import('@toast-ui/editor/dist/toastui-editor.css'),
+            ]).then(([{ default: Editor }]) => {
+                if (!isMounted || !editorContainerRef.current) return;
+                editorContainerRef.current.innerHTML = '';
+                editorInstanceRef.current = new Editor({
+                    el: editorContainerRef.current,
+                    height: '380px',
+                    initialEditType: 'markdown',
+                    previewStyle: 'vertical',
+                    initialValue: data.content || '',
+                    events: {
+                        change: () => {
+                            if (editorInstanceRef.current) {
+                                setData('content', editorInstanceRef.current.getMarkdown());
+                            }
+                        },
                     },
-                },
+                });
             });
         }
 
         return () => {
+            isMounted = false;
             if (editorInstanceRef.current) {
                 editorInstanceRef.current.destroy();
                 editorInstanceRef.current = null;
