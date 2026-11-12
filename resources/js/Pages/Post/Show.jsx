@@ -217,11 +217,11 @@ export default function PostShow({ post }) {
                                     Penulis Terverifikasi
                                 </span>
                             </div>
-                            <p className="text-xs text-[#8F9BB7]">Software Architect & Member Tech Contributor</p>
+                            <p className="text-xs text-[#CBD5E1]">Software Architect & Member Tech Contributor</p>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-4 text-[10px] text-[#8F9BB7] text-right">
+                    <div className="flex items-center gap-4 text-xs text-[#CBD5E1] text-right">
                         <div>
                             <p className="font-mono text-[#869CFF]">ID USER: #{post.user_id || '007'}</p>
                             <p>STATUS: {post.is_published ? 'Publik (Live)' : 'Draf Pribadi'}</p>
@@ -231,7 +231,7 @@ export default function PostShow({ post }) {
             </main>
 
             {/* STICKY BOTTOM ACTION BAR */}
-            <aside className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[95%] max-w-3xl bg-[#20253E]/95 backdrop-blur-md rounded-full border border-white/10 px-6 py-3 shadow-2xl flex items-center justify-between">
+            <aside aria-label="Aksi Cepat Artikel" className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[95%] max-w-3xl bg-[#20253E]/95 backdrop-blur-md rounded-full border border-white/10 px-6 py-3 shadow-2xl flex items-center justify-between">
                 <div className="flex items-center gap-2 text-xs">
                     <span className={`w-2 h-2 rounded-full ${post.is_published ? 'bg-[#4ADE80]' : 'bg-[#FBBF24]'}`} />
                     <span className="text-white font-semibold">
@@ -242,13 +242,13 @@ export default function PostShow({ post }) {
                 <div className="flex items-center gap-2.5">
                     <button
                         onClick={handleTogglePublish}
-                        className="px-4 py-1.5 rounded-full bg-[#272D48] hover:bg-[#32395C] text-[#8F9BB7] hover:text-white text-xs font-semibold transition"
+                        className="px-4 py-1.5 rounded-full bg-[#272D48] hover:bg-[#32395C] text-[#CBD5E1] hover:text-white text-xs font-semibold transition"
                     >
                         {post.is_published ? 'Kembalikan ke Draf' : 'Terbitkan Sekarang'}
                     </button>
                     <Link
                         href="/dashboard/posts"
-                        className="px-5 py-1.5 rounded-full bg-[#4E6EF2] hover:bg-[#3D5EE0] text-white text-xs font-bold transition shadow-md"
+                        className="px-5 py-1.5 rounded-full bg-[#3557EC] hover:bg-[#2A4BD9] text-white text-xs font-bold transition shadow-md"
                     >
                         Ubah di Editor TOAST UI
                     </Link>

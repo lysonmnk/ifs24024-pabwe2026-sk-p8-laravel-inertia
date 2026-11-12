@@ -80,7 +80,7 @@ export default function AppLayout({ children, title }) {
                                     href="/profile"
                                     className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium text-[#6B6A80] hover:text-[#14122B] hover:bg-[#F4F3FF] transition"
                                 >
-                                    <User className="w-4 h-4 text-[#A3A2B5]" />
+                                    <User className="w-4 h-4 text-[#52506B]" />
                                     <span>{auth.user.name}</span>
                                 </Link>
 
@@ -88,6 +88,7 @@ export default function AppLayout({ children, title }) {
                                     href="/logout"
                                     method="post"
                                     as="button"
+                                    aria-label="Keluar dari akun"
                                     className="p-2 rounded-full text-[#6B6A80] hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
                                     title="Keluar"
                                 >
@@ -104,7 +105,7 @@ export default function AppLayout({ children, title }) {
                                 </Link>
                                 <Link
                                     href="/register"
-                                    className="px-4 py-2 rounded-full bg-[#5B4FE9] hover:bg-[#4A3FD1] text-white text-sm font-medium transition shadow-sm"
+                                    className="px-4 py-2 rounded-full bg-[#3557EC] hover:bg-[#2A4BD9] text-white text-sm font-medium transition shadow-sm"
                                 >
                                     Daftar Penulis
                                 </Link>
@@ -115,6 +116,8 @@ export default function AppLayout({ children, title }) {
                     {/* Mobile Hamburger Button */}
                     <div className="flex md:hidden items-center">
                         <button
+                            type="button"
+                            aria-label="Buka menu navigasi"
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                             className="p-2 rounded-lg text-[#6B6A80] hover:text-[#14122B] hover:bg-[#F4F3FF]"
                         >
@@ -232,19 +235,19 @@ export default function AppLayout({ children, title }) {
             <footer className="bg-white border-t border-[#E8E7F0] mt-16 py-12 text-sm text-[#6B6A80]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
                     <div className="flex items-center gap-2">
-                        <span className="w-6 h-6 rounded bg-[#5B4FE9] text-white flex items-center justify-center font-bold text-xs">B</span>
+                        <span className="w-6 h-6 rounded bg-[#3557EC] text-white flex items-center justify-center font-bold text-xs">B</span>
                         <span className="font-semibold text-[#14122B]">Blog Platform</span>
-                        <span className="text-xs text-[#A3A2B5]">v1.0 &bull; Clean Architecture</span>
+                        <span className="text-xs text-[#52506B] font-medium">v1.0 &bull; Clean Architecture</span>
                     </div>
 
-                    <div className="flex flex-wrap justify-center gap-6 text-xs text-[#6B6A80]">
+                    <div className="flex flex-wrap justify-center gap-6 text-xs text-[#52506B] font-medium">
                         <Link href="/" className="hover:text-[#14122B] transition">Beranda</Link>
                         <Link href="/articles" className="hover:text-[#14122B] transition">Artikel Publik</Link>
                         <Link href="/login" className="hover:text-[#14122B] transition">Masuk</Link>
                         <Link href="/register" className="hover:text-[#14122B] transition">Daftar</Link>
                     </div>
 
-                    <div className="text-xs text-[#A3A2B5]">
+                    <div className="text-xs text-[#52506B] font-medium">
                         &copy; {new Date().getFullYear()} Blog. Dikembangkan untuk Praktikum PABWE.
                     </div>
                 </div>

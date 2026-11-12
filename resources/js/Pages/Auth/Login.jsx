@@ -40,22 +40,22 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen bg-[#101322] text-white flex flex-col justify-between p-4 sm:p-6 lg:p-8 font-sans selection:bg-[#4E6EF2] relative overflow-hidden">
+        <div className="min-h-screen bg-[#101322] text-white flex flex-col justify-between p-4 sm:p-6 lg:p-8 font-sans selection:bg-[#3557EC] relative overflow-hidden">
             <Head title="Masuk ke Akun - Blog" />
 
             {/* Ambient background glow */}
-            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#4E6EF2]/15 rounded-full blur-[140px] pointer-events-none" />
+            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#3557EC]/15 rounded-full blur-[140px] pointer-events-none" />
 
             {/* Header Nav */}
             <header className="w-full max-w-6xl mx-auto flex items-center justify-between z-10">
                 <Link href="/" className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-xl bg-[#4E6EF2] flex items-center justify-center text-white shadow-md">
+                    <div className="w-9 h-9 rounded-xl bg-[#3557EC] flex items-center justify-center text-white shadow-md">
                         <BookOpen className="w-5 h-5" />
                     </div>
                     <span className="text-white font-bold text-xl tracking-tight">Blog</span>
                 </Link>
 
-                <div className="flex items-center gap-1.5 text-xs text-[#8F9BB7]">
+                <div className="flex items-center gap-1.5 text-xs text-[#CBD5E1]">
                     <span>Need assistance?</span>
                     <a href="#support" className="text-white font-semibold hover:underline">Support</a>
                 </div>
@@ -66,13 +66,13 @@ export default function Login() {
                 <div className="bg-[#1A1F36] rounded-[28px] border border-white/10 p-6 sm:p-8 shadow-2xl backdrop-blur-md space-y-6">
                     {/* Top Icon & Heading */}
                     <div className="text-center space-y-2">
-                        <div className="w-12 h-12 mx-auto rounded-2xl bg-[#4E6EF2] flex items-center justify-center text-white shadow-lg">
+                        <div className="w-12 h-12 mx-auto rounded-2xl bg-[#3557EC] flex items-center justify-center text-white shadow-lg">
                             <BookOpen className="w-6 h-6" />
                         </div>
                         <h1 className="text-2xl font-black text-white tracking-tight">
                             Selamat Datang Kembali
                         </h1>
-                        <p className="text-xs text-[#8F9BB7] leading-relaxed">
+                        <p className="text-xs text-[#CBD5E1] leading-relaxed">
                             Akses ruang editorial dan terbitkan narasi terbaik Anda.
                         </p>
                     </div>
@@ -81,14 +81,14 @@ export default function Login() {
                     <div className="grid grid-cols-2 p-1.5 rounded-full bg-[#121526] border border-white/5 gap-1.5">
                         <button
                             type="button"
-                            className="w-full py-2.5 rounded-full bg-[#4E6EF2] text-white text-xs font-bold shadow-sm flex items-center justify-center gap-2"
+                            className="w-full py-2.5 rounded-full bg-[#3557EC] text-white text-xs font-bold shadow-sm flex items-center justify-center gap-2"
                         >
                             <ArrowRight className="w-3.5 h-3.5" />
                             <span>Masuk</span>
                         </button>
                         <Link
                             href="/register"
-                            className="w-full py-2.5 rounded-full text-[#8F9BB7] hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition"
+                            className="w-full py-2.5 rounded-full text-[#CBD5E1] hover:text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition"
                         >
                             <span>+ Daftar Akun</span>
                         </Link>
@@ -96,12 +96,12 @@ export default function Login() {
 
                     {/* 1-Click Demo Fill */}
                     <div className="p-3.5 rounded-[18px] bg-[#121526]/80 border border-white/5 space-y-2.5">
-                        <div className="flex items-center justify-between text-[11px]">
+                        <div className="flex items-center justify-between text-xs">
                             <span className="flex items-center gap-1 text-[#4ADE80] font-bold">
                                 <Zap className="w-3.5 h-3.5" />
                                 Akun Demo Penguji (Klik untuk isi cepat)
                             </span>
-                            <span className="px-1.5 py-0.2 rounded-full bg-[#4ADE80]/15 text-[#4ADE80] text-[9px] font-black">
+                            <span className="px-2 py-0.5 rounded-full bg-[#4ADE80]/15 text-[#4ADE80] text-xs font-black">
                                 1-Click Fill
                             </span>
                         </div>
@@ -112,11 +112,11 @@ export default function Login() {
                                 onClick={() => handleQuickFill('admin@example.com')}
                                 className="p-2.5 rounded-xl bg-[#202642] hover:bg-[#283054] text-left transition border border-white/5 group"
                             >
-                                <p className="text-[11px] font-bold text-white group-hover:text-[#4E6EF2] flex items-center justify-between">
+                                <p className="text-xs font-bold text-white group-hover:text-[#7C98F8] flex items-center justify-between">
                                     <span>Admin & Editor</span>
-                                    <span className="text-[10px] text-[#8F9BB7]">↗</span>
+                                    <span className="text-xs text-[#CBD5E1]">↗</span>
                                 </p>
-                                <p className="text-[9px] text-[#8F9BB7] truncate">admin@example.com</p>
+                                <p className="text-xs text-[#CBD5E1] truncate">admin@example.com</p>
                             </button>
 
                             <button
@@ -124,11 +124,11 @@ export default function Login() {
                                 onClick={() => handleQuickFill('user@example.com')}
                                 className="p-2.5 rounded-xl bg-[#202642] hover:bg-[#283054] text-left transition border border-white/5 group"
                             >
-                                <p className="text-[11px] font-bold text-white group-hover:text-[#4E6EF2] flex items-center justify-between">
+                                <p className="text-xs font-bold text-white group-hover:text-[#7C98F8] flex items-center justify-between">
                                     <span>Member Penulis</span>
-                                    <span className="text-[10px] text-[#8F9BB7]">↗</span>
+                                    <span className="text-xs text-[#CBD5E1]">↗</span>
                                 </p>
-                                <p className="text-[9px] text-[#8F9BB7] truncate">user@example.com</p>
+                                <p className="text-xs text-[#CBD5E1] truncate">user@example.com</p>
                             </button>
                         </div>
                     </div>
@@ -139,11 +139,11 @@ export default function Login() {
                         <input type="hidden" name="username" id="login-username-hidden" value={data.email} />
                         {/* Email Field */}
                         <div className="space-y-1.5">
-                            <label htmlFor="login-username" className="block text-xs font-semibold text-[#8F9BB7]">
+                            <label htmlFor="login-username" className="block text-xs font-semibold text-[#CBD5E1]">
                                 Surel atau Nama Pengguna
                             </label>
                             <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#8F9BB7]">
+                                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#CBD5E1]">
                                     <AtSign className="w-4 h-4" />
                                 </div>
                                 <input
@@ -156,26 +156,26 @@ export default function Login() {
                                     placeholder="nama@blog.id atau username"
                                     autoComplete="username"
                                     required
-                                    className="w-full bg-[#121526] text-white text-xs pl-10 pr-4 py-3 rounded-full border border-white/10 focus:border-[#4E6EF2] focus:outline-none focus:ring-2 focus:ring-[#4E6EF2]/20 transition"
+                                    className="w-full bg-[#121526] text-white text-xs pl-10 pr-4 py-3 rounded-full border border-white/10 focus:border-[#3557EC] focus:outline-none focus:ring-2 focus:ring-[#3557EC]/20 transition"
                                 />
                             </div>
                             {(combinedErrors.email || errors.email) && (
-                                <p className="text-[11px] text-red-400 pl-2">{combinedErrors.email || errors.email}</p>
+                                <p className="text-xs text-red-400 pl-2">{combinedErrors.email || errors.email}</p>
                             )}
                         </div>
 
                         {/* Password Field */}
                         <div className="space-y-1.5">
                             <div className="flex items-center justify-between">
-                                <label htmlFor="login-password" className="block text-xs font-semibold text-[#8F9BB7]">
+                                <label htmlFor="login-password" className="block text-xs font-semibold text-[#CBD5E1]">
                                     Kata Sandi
                                 </label>
-                                <span className="text-[10px] text-[#8F9BB7] hover:text-white cursor-pointer">
+                                <span className="text-xs text-[#CBD5E1] hover:text-white cursor-pointer">
                                     Lupa Kata Sandi?
                                 </span>
                             </div>
                             <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#8F9BB7]">
+                                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#CBD5E1]">
                                     <Lock className="w-4 h-4" />
                                 </div>
                                 <input
@@ -188,18 +188,19 @@ export default function Login() {
                                     placeholder="Minimal 8 karakter aman"
                                     autoComplete="current-password"
                                     required
-                                    className="w-full bg-[#121526] text-white text-xs pl-10 pr-10 py-3 rounded-full border border-white/10 focus:border-[#4E6EF2] focus:outline-none focus:ring-2 focus:ring-[#4E6EF2]/20 transition"
+                                    className="w-full bg-[#121526] text-white text-xs pl-10 pr-10 py-3 rounded-full border border-white/10 focus:border-[#3557EC] focus:outline-none focus:ring-2 focus:ring-[#3557EC]/20 transition"
                                 />
                                 <button
                                     type="button"
+                                    aria-label="Tampilkan atau sembunyikan kata sandi"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#8F9BB7] hover:text-white"
+                                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#CBD5E1] hover:text-white"
                                 >
                                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                             </div>
                             {(combinedErrors.password || errors.password) && (
-                                <p className="text-[11px] text-red-400 pl-2">{combinedErrors.password || errors.password}</p>
+                                <p className="text-xs text-red-400 pl-2">{combinedErrors.password || errors.password}</p>
                             )}
                         </div>
 
@@ -212,9 +213,9 @@ export default function Login() {
                                 value="1"
                                 checked={data.remember}
                                 onChange={(e) => setData('remember', e.target.checked)}
-                                className="w-4 h-4 rounded bg-[#121526] border-white/20 text-[#4E6EF2] focus:ring-0 cursor-pointer"
+                                className="w-4 h-4 rounded bg-[#121526] border-white/20 text-[#3557EC] focus:ring-0 cursor-pointer"
                             />
-                            <label htmlFor="remember-me" className="text-xs text-[#8F9BB7] cursor-pointer">
+                            <label htmlFor="remember-me" className="text-xs text-[#CBD5E1] cursor-pointer">
                                 Ingat sesi login saya pada perangkat ini
                             </label>
                         </div>
@@ -225,7 +226,7 @@ export default function Login() {
                             data-testid="submit"
                             type="submit"
                             disabled={processing}
-                            className="w-full py-3.5 rounded-full bg-[#4E6EF2] hover:bg-[#3D5EE0] text-white text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg active:scale-95 disabled:opacity-50 cursor-pointer"
+                            className="w-full py-3.5 rounded-full bg-[#3557EC] hover:bg-[#2A4BD9] text-white text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg active:scale-95 disabled:opacity-50 cursor-pointer"
                         >
                             {processing ? (
                                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -239,19 +240,19 @@ export default function Login() {
                     </form>
 
                     {/* Encryption badge */}
-                    <div className="flex items-center justify-center gap-1.5 text-[10px] text-[#8F9BB7] pt-2">
-                        <Lock className="w-3 h-3 text-[#4ADE80]" />
+                    <div className="flex items-center justify-center gap-1.5 text-xs text-[#CBD5E1] pt-2">
+                        <Lock className="w-3.5 h-3.5 text-[#4ADE80]" />
                         <span>Enkripsi TLS 256-bit berstandar industri editorial.</span>
                     </div>
                 </div>
 
                 {/* Bottom Badges */}
-                <div className="flex items-center justify-center gap-4 sm:gap-6 text-[10px] text-[#8F9BB7] pt-6 flex-wrap">
+                <div className="flex items-center justify-center gap-4 sm:gap-6 text-xs text-[#CBD5E1] pt-6 flex-wrap">
                     <span className="flex items-center gap-1.5">
                         <CheckCircle2 className="w-3.5 h-3.5 text-[#4ADE80]" /> Single Sign-On Siap
                     </span>
                     <span className="flex items-center gap-1.5">
-                        <Zap className="w-3.5 h-3.5 text-[#4E6EF2]" /> Waktu Akses &lt; 150ms
+                        <Zap className="w-3.5 h-3.5 text-[#7C98F8]" /> Waktu Akses &lt; 150ms
                     </span>
                     <span className="flex items-center gap-1.5">
                         <ShieldCheck className="w-3.5 h-3.5 text-[#4ADE80]" /> Kepatuhan Data Terjamin
@@ -260,12 +261,12 @@ export default function Login() {
             </main>
 
             {/* Footer */}
-            <footer className="w-full max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#8F9BB7]/70 gap-2 pt-4 z-10 border-t border-white/5">
+            <footer className="w-full max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between text-xs text-[#CBD5E1] gap-2 pt-4 z-10 border-t border-white/5">
                 <p>© 2026 Blog Editorial Systems. Crafted for focused writing.</p>
                 <div className="flex items-center gap-4">
-                    <a href="#terms" className="hover:text-white">Terms</a>
-                    <a href="#privacy" className="hover:text-white">Privacy</a>
-                    <a href="#status" className="hover:text-white">Status</a>
+                    <a href="#terms" className="text-[#CBD5E1] hover:text-white">Terms</a>
+                    <a href="#privacy" className="text-[#CBD5E1] hover:text-white">Privacy</a>
+                    <a href="#status" className="text-[#CBD5E1] hover:text-white">Status</a>
                 </div>
             </footer>
         </div>

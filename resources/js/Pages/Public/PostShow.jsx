@@ -50,7 +50,7 @@ export default function PostShow({ article }) {
                             {article.category}
                         </span>
                         <span className="flex items-center gap-1.5 text-xs text-[#6B6A80]">
-                            <Calendar className="w-3.5 h-3.5 text-[#A3A2B5]" />
+                            <Calendar className="w-3.5 h-3.5 text-[#52506B]" />
                             <span>
                                 {article.published_at
                                     ? new Date(article.published_at).toLocaleDateString('id-ID', {
@@ -68,25 +68,25 @@ export default function PostShow({ article }) {
                     </h1>
 
                     {article.excerpt && (
-                        <p className="mt-4 text-base sm:text-lg text-[#6B6A80] leading-relaxed italic border-l-4 border-[#5B4FE9] pl-4 bg-white/50 py-2 rounded-r-xl">
+                        <p className="mt-4 text-base sm:text-lg text-[#6B6A80] leading-relaxed italic border-l-4 border-[#3557EC] pl-4 bg-white/50 py-2 rounded-r-xl">
                             {article.excerpt}
                         </p>
                     )}
 
                     <div className="mt-6 pt-4 border-t border-[#E8E7F0] flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-[#5B4FE9] text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                            <div className="w-10 h-10 rounded-full bg-[#3557EC] text-white flex items-center justify-center font-bold text-sm shadow-sm">
                                 {article.user?.name ? article.user.name.charAt(0) : 'U'}
                             </div>
                             <div>
                                 <p className="text-sm font-bold text-[#14122B]">{article.user?.name || 'Penulis Blog'}</p>
-                                <p className="text-xs text-[#A3A2B5]">Kontributor Terverifikasi</p>
+                                <p className="text-xs text-[#52506B]">Kontributor Terverifikasi</p>
                             </div>
                         </div>
 
                         <button
                             onClick={handleShare}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E8E7F0] bg-white hover:bg-[#F4F3FF] text-xs font-medium text-[#6B6A80] hover:text-[#5B4FE9] transition cursor-pointer"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E8E7F0] bg-white hover:bg-[#F4F3FF] text-xs font-medium text-[#6B6A80] hover:text-[#3557EC] transition cursor-pointer"
                         >
                             <Share2 className="w-3.5 h-3.5" />
                             <span>{copied ? 'Tautan Disalin!' : 'Bagikan'}</span>

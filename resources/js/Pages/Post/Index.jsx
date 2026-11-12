@@ -279,36 +279,36 @@ export default function MemberDashboard(props) {
             <div className="w-full max-w-[1540px] bg-[#1E233C] rounded-[28px] overflow-hidden shadow-2xl border border-white/5 flex flex-col xl:flex-row">
                 
                 {/* 1. SIDEBAR KIRI (Rel Ikon Sempit + Menu Berlabel) */}
-                <aside className="w-full xl:w-72 shrink-0 bg-[#252A46] flex border-b xl:border-b-0 xl:border-r border-white/5">
+                <aside aria-label="Navigasi Utama" className="w-full xl:w-72 shrink-0 bg-[#252A46] flex border-b xl:border-b-0 xl:border-r border-white/5">
                     {/* Rel Ikon Sempit */}
                     <div className="w-16 bg-[#1A1E33] py-6 flex flex-col items-center justify-between border-r border-white/5 shrink-0">
                         <div className="space-y-6 flex flex-col items-center">
                             {/* Logo B */}
-                            <div className="w-10 h-10 rounded-full bg-[#4E6EF2] flex items-center justify-center font-black text-white text-base shadow-md">
+                            <div className="w-10 h-10 rounded-full bg-[#3557EC] flex items-center justify-center font-black text-white text-base shadow-md">
                                 B
                             </div>
 
                             {/* Ikon Menu Rel */}
                             <div className="space-y-4 pt-2">
-                                <button className="p-2.5 rounded-xl bg-[#4E6EF2] text-white shadow-sm block">
+                                <button aria-label="Dashboard" className="p-2.5 rounded-xl bg-[#3557EC] text-white shadow-sm block">
                                     <LayoutDashboard className="w-5 h-5" />
                                 </button>
-                                <button onClick={() => router.get('/dashboard/posts')} className="p-2.5 rounded-xl text-[#8F9BB7] hover:text-white transition block">
+                                <button aria-label="Artikel Saya" onClick={() => router.get('/dashboard/posts')} className="p-2.5 rounded-xl text-[#CBD5E1] hover:text-white transition block">
                                     <FileText className="w-5 h-5" />
                                 </button>
-                                <button onClick={() => setAiModalOpen(true)} className="p-2.5 rounded-xl text-[#8F9BB7] hover:text-white transition block">
+                                <button aria-label="AI Generator" onClick={() => setAiModalOpen(true)} className="p-2.5 rounded-xl text-[#CBD5E1] hover:text-white transition block">
                                     <Sparkles className="w-5 h-5" />
                                 </button>
-                                <button onClick={() => setImportModalOpen(true)} className="p-2.5 rounded-xl text-[#8F9BB7] hover:text-white transition block">
+                                <button aria-label="Import & Export" onClick={() => setImportModalOpen(true)} className="p-2.5 rounded-xl text-[#CBD5E1] hover:text-white transition block">
                                     <ArrowUpDown className="w-5 h-5" />
                                 </button>
-                                <button onClick={() => router.get('/profile')} className="p-2.5 rounded-xl text-[#8F9BB7] hover:text-white transition block">
+                                <button aria-label="Profil" onClick={() => router.get('/profile')} className="p-2.5 rounded-xl text-[#CBD5E1] hover:text-white transition block">
                                     <User className="w-5 h-5" />
                                 </button>
                             </div>
                         </div>
 
-                        <button className="text-[#8F9BB7] hover:text-white transition">
+                        <button aria-label="Pengaturan" className="text-[#CBD5E1] hover:text-white transition">
                             <Settings className="w-5 h-5" />
                         </button>
                     </div>
@@ -318,13 +318,13 @@ export default function MemberDashboard(props) {
                         <div className="space-y-6">
                             {/* Header Studio */}
                             <div className="flex items-center gap-2 px-2">
-                                <span className="w-2 h-2 rounded-full bg-[#4E6EF2]" />
+                                <span className="w-2 h-2 rounded-full bg-[#3557EC]" />
                                 <span className="text-white font-bold text-lg tracking-tight">BlogStudio</span>
                             </div>
 
                             {/* Navigasi Menu */}
                             <nav className="space-y-1.5">
-                                <button className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-full bg-[#4E6EF2] text-white font-semibold text-xs shadow-md">
+                                <button className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-full bg-[#3557EC] text-white font-semibold text-xs shadow-md">
                                     <div className="flex items-center gap-2.5">
                                         <LayoutDashboard className="w-4 h-4" />
                                         <span>Dashboard</span>
@@ -334,33 +334,33 @@ export default function MemberDashboard(props) {
 
                                 <button 
                                     onClick={() => router.get('/dashboard/posts')}
-                                    className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-[#8F9BB7] hover:text-white hover:bg-[#2B3252] transition text-xs font-medium"
+                                    className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-[#CBD5E1] hover:text-white hover:bg-[#2B3252] transition text-xs font-medium"
                                 >
                                     <div className="flex items-center gap-2.5">
                                         <FileText className="w-4 h-4" />
                                         <span>Artikel Saya</span>
                                     </div>
-                                    <span className="px-2 py-0.5 rounded-full bg-[#1A1E33] text-[10px] font-bold text-[#8F9BB7]">
+                                    <span className="px-2 py-0.5 rounded-full bg-[#1A1E33] text-xs font-bold text-[#CBD5E1]">
                                         {totalCount}
                                     </span>
                                 </button>
 
                                 <button 
                                     onClick={() => setAiModalOpen(true)}
-                                    className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-[#8F9BB7] hover:text-white hover:bg-[#2B3252] transition text-xs font-medium"
+                                    className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-full text-[#CBD5E1] hover:text-white hover:bg-[#2B3252] transition text-xs font-medium"
                                 >
                                     <div className="flex items-center gap-2.5">
                                         <Sparkles className="w-4 h-4" />
                                         <span>AI Generator</span>
                                     </div>
-                                    <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-[9px] font-black text-white uppercase">
+                                    <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-xs font-black text-white uppercase">
                                         PRO
                                     </span>
                                 </button>
 
                                 <button 
                                     onClick={() => setImportModalOpen(true)}
-                                    className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-full text-[#8F9BB7] hover:text-white hover:bg-[#2B3252] transition text-xs font-medium"
+                                    className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-full text-[#CBD5E1] hover:text-white hover:bg-[#2B3252] transition text-xs font-medium"
                                 >
                                     <ArrowUpDown className="w-4 h-4" />
                                     <span>Import & Export</span>
@@ -368,7 +368,7 @@ export default function MemberDashboard(props) {
 
                                 <button 
                                     onClick={() => router.get('/profile')}
-                                    className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-full text-[#8F9BB7] hover:text-white hover:bg-[#2B3252] transition text-xs font-medium"
+                                    className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-full text-[#CBD5E1] hover:text-white hover:bg-[#2B3252] transition text-xs font-medium"
                                 >
                                     <User className="w-4 h-4" />
                                     <span>Profil</span>
@@ -380,7 +380,7 @@ export default function MemberDashboard(props) {
                         <div className="pt-6">
                             <button
                                 onClick={() => router.post('/logout')}
-                                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-full text-xs font-medium text-[#8F9BB7] hover:text-white hover:bg-[#2B3252] transition"
+                                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-full text-xs font-medium text-[#CBD5E1] hover:text-white hover:bg-[#2B3252] transition"
                             >
                                 <LogOut className="w-4 h-4" />
                                 <span>Log Out</span>
@@ -400,29 +400,29 @@ export default function MemberDashboard(props) {
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 placeholder="Cari artikel saya..."
-                                className="w-full bg-[#272D48] text-xs text-white placeholder-[#8F9BB7] rounded-full pl-4 pr-9 py-2.5 border border-transparent focus:border-[#4E6EF2] focus:outline-none transition"
+                                className="w-full bg-[#272D48] text-xs text-white placeholder-[#CBD5E1] rounded-full pl-4 pr-9 py-2.5 border border-transparent focus:border-[#3557EC] focus:outline-none transition"
                             />
-                            <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8F9BB7]">
+                            <button type="submit" aria-label="Cari artikel" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#CBD5E1]">
                                 <Search className="w-3.5 h-3.5" />
                             </button>
                         </form>
 
                         <div className="flex items-center gap-3">
-                            <div className="hidden sm:flex items-center gap-1 px-3 py-1.5 bg-[#272D48] text-[#8F9BB7] text-xs font-semibold rounded-full border border-white/5 cursor-pointer">
+                            <div className="hidden sm:flex items-center gap-1 px-3 py-1.5 bg-[#272D48] text-[#CBD5E1] text-xs font-semibold rounded-full border border-white/5 cursor-pointer">
                                 <span>IDN</span>
                                 <ChevronDown className="w-3 h-3" />
                             </div>
 
-                            <button className="p-2 rounded-full bg-[#272D48] text-[#8F9BB7] hover:text-white transition">
+                            <button aria-label="Notifikasi" className="p-2 rounded-full bg-[#272D48] text-[#CBD5E1] hover:text-white transition">
                                 <Bell className="w-4 h-4" />
                             </button>
 
                             <div className="flex items-center gap-2.5 pl-2">
                                 <div className="text-right hidden sm:block">
                                     <p className="text-xs font-bold text-white leading-tight">{displayMemberName}</p>
-                                    <p className="text-[10px] text-[#8F9BB7] leading-tight">Senior Author</p>
+                                    <p className="text-xs text-[#CBD5E1] leading-tight">Senior Author</p>
                                 </div>
-                                <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#4E6EF2] to-[#869CFF] flex items-center justify-center text-white font-bold text-xs shadow-md border-2 border-[#1E233C]">
+                                <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#3557EC] to-[#869CFF] flex items-center justify-center text-white font-bold text-xs shadow-md border-2 border-[#1E233C]">
                                     {displayMemberName.charAt(0).toUpperCase()}
                                 </div>
                             </div>
@@ -430,7 +430,7 @@ export default function MemberDashboard(props) {
                     </div>
 
                     {/* Banner Sapaan */}
-                    <div className="bg-[#4E6EF2] rounded-[24px] p-6 sm:p-8 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xl relative overflow-hidden">
+                    <div className="bg-[#3557EC] rounded-[24px] p-6 sm:p-8 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xl relative overflow-hidden">
                         <div className="space-y-2 max-w-lg z-10">
                             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
                                 Halo, {displayMemberName}! 👋
@@ -443,7 +443,7 @@ export default function MemberDashboard(props) {
                                     onClick={handleOpenCreateModal}
                                     className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-[#111424] text-xs font-bold rounded-full hover:bg-white/95 transition active:scale-95 shadow-md cursor-pointer"
                                 >
-                                    <Plus className="w-4 h-4 stroke-[3] text-[#4E6EF2]" />
+                                    <Plus className="w-4 h-4 stroke-[3] text-[#3557EC]" />
                                     <span>+ Tambah Artikel</span>
                                 </button>
                             </div>
@@ -456,7 +456,7 @@ export default function MemberDashboard(props) {
                             </div>
                             <div className="text-xs">
                                 <p className="font-bold text-white">Editor Aktif</p>
-                                <p className="text-white/80 text-[11px]">{draftCount} Draft Tersimpan</p>
+                                <p className="text-white/80 text-xs">{draftCount} Draft Tersimpan</p>
                             </div>
                         </div>
                     </div>
@@ -465,37 +465,37 @@ export default function MemberDashboard(props) {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
                         {/* 1. Total Artikel */}
                         <div className="bg-[#272D48] p-4 rounded-[18px] flex flex-col justify-between space-y-3">
-                            <div className="flex items-center justify-between text-[#8F9BB7]">
-                                <span className="text-[10px] font-bold tracking-wider uppercase">TOTAL ARTIKEL</span>
+                            <div className="flex items-center justify-between text-[#CBD5E1]">
+                                <span className="text-xs font-bold tracking-wider uppercase">TOTAL ARTIKEL</span>
                                 <FileText className="w-3.5 h-3.5" />
                             </div>
                             <div>
                                 <p className="text-2xl sm:text-3xl font-black text-white">{totalCount}</p>
-                                <p className="text-[10px] text-[#8F9BB7] mt-0.5">Tulisan dalam database</p>
+                                <p className="text-xs text-[#CBD5E1] mt-0.5">Tulisan dalam database</p>
                             </div>
                         </div>
 
                         {/* 2. Selesai / Terbit */}
                         <div className="bg-[#272D48] p-4 rounded-[18px] flex flex-col justify-between space-y-3">
                             <div className="flex items-center justify-between">
-                                <span className="text-[10px] font-bold tracking-wider uppercase text-[#8F9BB7]">SELESAI / TERBIT</span>
-                                <span className="px-1.5 py-0.5 rounded-full bg-[#4ADE80]/20 text-[#4ADE80] text-[9px] font-black uppercase">Live</span>
+                                <span className="text-xs font-bold tracking-wider uppercase text-[#CBD5E1]">SELESAI / TERBIT</span>
+                                <span className="px-1.5 py-0.5 rounded-full bg-[#4ADE80]/20 text-[#4ADE80] text-xs font-black uppercase">Live</span>
                             </div>
                             <div>
                                 <p className="text-2xl sm:text-3xl font-black text-[#4ADE80]">{publishedCount}</p>
-                                <p className="text-[10px] text-[#8F9BB7] mt-0.5">Artikel aktif online</p>
+                                <p className="text-xs text-[#CBD5E1] mt-0.5">Artikel aktif online</p>
                             </div>
                         </div>
 
                         {/* 3. Belum Selesai */}
                         <div className="bg-[#272D48] p-4 rounded-[18px] flex flex-col justify-between space-y-3">
                             <div className="flex items-center justify-between">
-                                <span className="text-[10px] font-bold tracking-wider uppercase text-[#8F9BB7]">BELUM SELESAI</span>
-                                <span className="px-1.5 py-0.5 rounded-full bg-[#FBBF24]/20 text-[#FBBF24] text-[9px] font-black uppercase">Draft</span>
+                                <span className="text-xs font-bold tracking-wider uppercase text-[#CBD5E1]">BELUM SELESAI</span>
+                                <span className="px-1.5 py-0.5 rounded-full bg-[#FBBF24]/20 text-[#FBBF24] text-xs font-black uppercase">Draft</span>
                             </div>
                             <div>
                                 <p className="text-2xl sm:text-3xl font-black text-white">{draftCount}</p>
-                                <p className="text-[10px] text-[#8F9BB7] mt-0.5">Memerlukan review</p>
+                                <p className="text-xs text-[#CBD5E1] mt-0.5">Memerlukan review</p>
                             </div>
                         </div>
 
@@ -508,7 +508,7 @@ export default function MemberDashboard(props) {
                                         cx="30"
                                         cy="30"
                                         r={radius}
-                                        stroke="#4E6EF2"
+                                        stroke="#3557EC"
                                         strokeWidth="7"
                                         strokeDasharray={circumference}
                                         strokeDashoffset={strokeDashoffset}
@@ -517,12 +517,12 @@ export default function MemberDashboard(props) {
                                         className="transition-all duration-700"
                                     />
                                 </svg>
-                                <span className="absolute text-[11px] font-black text-white">{publishedPercentage}%</span>
+                                <span className="absolute text-xs font-black text-white">{publishedPercentage}%</span>
                             </div>
-                            <div className="text-[10px] leading-tight space-y-0.5">
+                            <div className="text-xs leading-tight space-y-0.5">
                                 <p className="font-bold text-white">Proporsi Artikel</p>
                                 <p className="text-[#4ADE80] font-semibold">{publishedCount} Published</p>
-                                <p className="text-[#8F9BB7]">{draftCount} Draft</p>
+                                <p className="text-[#CBD5E1]">{draftCount} Draft</p>
                             </div>
                         </div>
                     </div>
@@ -531,7 +531,7 @@ export default function MemberDashboard(props) {
                     <div className="space-y-3">
                         <div className="flex items-center justify-between">
                             <h2 className="text-sm font-bold text-white tracking-tight">Artikel Saya</h2>
-                            <button className="text-[11px] font-semibold text-[#4E6EF2] hover:underline">
+                            <button className="text-xs font-semibold text-[#869CFF] hover:underline">
                                 Lihat semua
                             </button>
                         </div>
@@ -548,18 +548,18 @@ export default function MemberDashboard(props) {
                                     >
                                         {/* Thumbnail & Title */}
                                         <div className="flex items-center gap-3 min-w-0 flex-1">
-                                            <div className="w-10 h-10 rounded-[10px] bg-[#1A1E33] shrink-0 overflow-hidden flex items-center justify-center text-xs font-bold text-[#8F9BB7]">
+                                            <div className="w-10 h-10 rounded-[10px] bg-[#1A1E33] shrink-0 overflow-hidden flex items-center justify-center text-xs font-bold text-[#CBD5E1]">
                                                 {post.cover_image ? (
                                                     <img src={`/storage/${post.cover_image}`} alt="" className="w-full h-full object-cover" />
                                                 ) : (
-                                                    <FileText className="w-4 h-4 text-[#4E6EF2]" />
+                                                    <FileText className="w-4 h-4 text-[#7C98F8]" />
                                                 )}
                                             </div>
                                             <div className="min-w-0">
                                                 <p className="text-xs font-bold text-white truncate max-w-md">
                                                     {post.title}
                                                 </p>
-                                                <p className="text-[10px] text-[#8F9BB7] truncate">
+                                                <p className="text-xs text-[#CBD5E1] truncate">
                                                     <span className="text-[#869CFF] font-medium">{post.category || 'Teknologi'}</span> • {dateStr}
                                                 </p>
                                             </div>
@@ -567,10 +567,10 @@ export default function MemberDashboard(props) {
 
                                         {/* Status Badge & Actions */}
                                         <div className="flex items-center gap-3 shrink-0">
-                                            <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                                            <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${
                                                 isPublished 
                                                     ? 'bg-[#4ADE80]/15 text-[#4ADE80] border border-[#4ADE80]/30' 
-                                                    : 'bg-[#8F9BB7]/15 text-[#8F9BB7] border border-[#8F9BB7]/30'
+                                                    : 'bg-[#CBD5E1]/15 text-[#CBD5E1] border border-[#CBD5E1]/30'
                                             }`}>
                                                 {isPublished ? 'Published' : 'Draft'}
                                             </span>
@@ -578,7 +578,8 @@ export default function MemberDashboard(props) {
                                             <button
                                                 onClick={() => handleTogglePublish(post)}
                                                 title="Ganti status publikasi"
-                                                className="p-1.5 rounded-lg text-[#8F9BB7] hover:text-white hover:bg-[#1A1E33] transition"
+                                                aria-label={`Ganti status publikasi ${post.title}`}
+                                                className="p-1.5 rounded-lg text-[#CBD5E1] hover:text-white hover:bg-[#1A1E33] transition"
                                             >
                                                 <ArrowLeftRight className="w-3.5 h-3.5" />
                                             </button>
@@ -586,7 +587,8 @@ export default function MemberDashboard(props) {
                                             <div className="relative">
                                                 <button
                                                     onClick={() => setOpenKebabId(openKebabId === post.id ? null : post.id)}
-                                                    className="p-1.5 rounded-lg text-[#8F9BB7] hover:text-white hover:bg-[#1A1E33] transition"
+                                                    aria-label={`Menu tindakan untuk ${post.title}`}
+                                                    className="p-1.5 rounded-lg text-[#CBD5E1] hover:text-white hover:bg-[#1A1E33] transition"
                                                 >
                                                     <MoreVertical className="w-3.5 h-3.5" />
                                                 </button>
@@ -595,13 +597,13 @@ export default function MemberDashboard(props) {
                                                     <div className="absolute right-0 bottom-full mb-1 w-32 bg-[#1A1E33] rounded-xl shadow-2xl border border-white/10 py-1 z-30">
                                                         <button
                                                             onClick={() => router.get(`/dashboard/posts/${post.id}`)}
-                                                            className="w-full text-left px-3 py-1.5 text-[11px] text-[#8F9BB7] hover:text-white flex items-center gap-2"
+                                                            className="w-full text-left px-3 py-1.5 text-xs text-[#CBD5E1] hover:text-white flex items-center gap-2"
                                                         >
                                                             <Eye className="w-3 h-3" /> Detail
                                                         </button>
                                                         <button
                                                             onClick={() => handleOpenEditModal(post)}
-                                                            className="w-full text-left px-3 py-1.5 text-[11px] text-[#8F9BB7] hover:text-white flex items-center gap-2"
+                                                            className="w-full text-left px-3 py-1.5 text-xs text-[#CBD5E1] hover:text-white flex items-center gap-2"
                                                         >
                                                             <Edit2 className="w-3 h-3" /> Ubah
                                                         </button>
@@ -610,7 +612,7 @@ export default function MemberDashboard(props) {
                                                                 setOpenKebabId(null);
                                                                 setDeleteModalPost(post);
                                                             }}
-                                                            className="w-full text-left px-3 py-1.5 text-[11px] text-red-400 hover:text-red-300 flex items-center gap-2"
+                                                            className="w-full text-left px-3 py-1.5 text-xs text-red-400 hover:text-red-300 flex items-center gap-2"
                                                         >
                                                             <Trash2 className="w-3 h-3" /> Hapus
                                                         </button>
@@ -626,15 +628,15 @@ export default function MemberDashboard(props) {
                 </main>
 
                 {/* 3. PANEL KANAN (Aksi Cepat & Sinkronisasi) */}
-                <aside className="w-full xl:w-80 shrink-0 bg-[#252A46] p-5 sm:p-6 space-y-5 border-t xl:border-t-0 xl:border-l border-white/5 flex flex-col justify-between">
+                <aside aria-label="Panel Aksi Cepat" className="w-full xl:w-80 shrink-0 bg-[#252A46] p-5 sm:p-6 space-y-5 border-t xl:border-t-0 xl:border-l border-white/5 flex flex-col justify-between">
                     <div className="space-y-4">
                         {/* Header Panel */}
                         <div className="flex items-center justify-between">
                             <div>
                                 <h3 className="text-sm font-bold text-white">Aksi Cepat</h3>
-                                <p className="text-[10px] text-[#8F9BB7]">Pintasan produktivitas</p>
+                                <p className="text-xs text-[#CBD5E1]">Pintasan produktivitas</p>
                             </div>
-                            <span className="px-2 py-0.5 rounded-full bg-[#1A1E33] text-[10px] font-bold text-[#8F9BB7]">
+                            <span className="px-2 py-0.5 rounded-full bg-[#1A1E33] text-xs font-bold text-[#CBD5E1]">
                                 Hari Ini
                             </span>
                         </div>
@@ -642,7 +644,7 @@ export default function MemberDashboard(props) {
                         {/* Kartu 1: AI Assistant */}
                         <button
                             onClick={() => setAiModalOpen(true)}
-                            className="w-full bg-gradient-to-r from-[#4E6EF2] to-[#6885FF] text-white p-3.5 rounded-[18px] flex items-center justify-between text-left shadow-lg hover:opacity-95 transition"
+                            className="w-full bg-gradient-to-r from-[#3557EC] to-[#4F73F8] text-white p-3.5 rounded-[18px] flex items-center justify-between text-left shadow-lg hover:opacity-95 transition"
                         >
                             <div className="flex items-center gap-3">
                                 <div className="p-2 rounded-xl bg-white/20">
@@ -650,7 +652,7 @@ export default function MemberDashboard(props) {
                                 </div>
                                 <div>
                                     <p className="text-xs font-bold leading-tight">AI Assistant</p>
-                                    <p className="text-[10px] text-white/80 leading-tight">Generate Ide Konten</p>
+                                    <p className="text-xs text-white/90 leading-tight">Generate Ide Konten</p>
                                 </div>
                             </div>
                             <ArrowRight className="w-4 h-4" />
@@ -662,15 +664,15 @@ export default function MemberDashboard(props) {
                             className="w-full bg-white text-[#111424] p-3.5 rounded-[18px] flex items-center justify-between text-left shadow-md hover:bg-white/95 transition"
                         >
                             <div className="flex items-center gap-3">
-                                <div className="p-2 rounded-xl bg-emerald-100 text-emerald-600">
+                                <div className="p-2 rounded-xl bg-emerald-100 text-emerald-700">
                                     <Upload className="w-4 h-4" />
                                 </div>
                                 <div>
                                     <div className="flex items-center gap-1.5">
                                         <p className="text-xs font-bold leading-tight">Import Artikel</p>
-                                        <span className="px-1.5 py-0.2 rounded-sm bg-emerald-600 text-[8px] font-black text-white">.xlsx</span>
+                                        <span className="px-1.5 py-0.5 rounded-sm bg-emerald-700 text-xs font-black text-white">.xlsx</span>
                                     </div>
-                                    <p className="text-[10px] text-[#6B7280] leading-tight">Unggah dari Excel</p>
+                                    <p className="text-xs text-[#334155] leading-tight">Unggah dari Excel</p>
                                 </div>
                             </div>
                             <ArrowRight className="w-4 h-4 text-gray-400" />
@@ -682,15 +684,15 @@ export default function MemberDashboard(props) {
                             className="w-full bg-white text-[#111424] p-3.5 rounded-[18px] flex items-center justify-between text-left shadow-md hover:bg-white/95 transition"
                         >
                             <div className="flex items-center gap-3">
-                                <div className="p-2 rounded-xl bg-blue-100 text-[#4E6EF2]">
+                                <div className="p-2 rounded-xl bg-blue-100 text-[#3557EC]">
                                     <Download className="w-4 h-4" />
                                 </div>
                                 <div>
                                     <div className="flex items-center gap-1.5">
                                         <p className="text-xs font-bold leading-tight">Export Backup</p>
-                                        <span className="px-1.5 py-0.2 rounded-sm bg-[#4E6EF2] text-[8px] font-black text-white">.xlsx</span>
+                                        <span className="px-1.5 py-0.5 rounded-sm bg-[#3557EC] text-xs font-black text-white">.xlsx</span>
                                     </div>
-                                    <p className="text-[10px] text-[#6B7280] leading-tight">Unduh data arsip</p>
+                                    <p className="text-xs text-[#334155] leading-tight">Unduh data arsip</p>
                                 </div>
                             </div>
                             <ArrowRight className="w-4 h-4 text-gray-400" />
@@ -698,8 +700,8 @@ export default function MemberDashboard(props) {
 
                         {/* Status Sinkronisasi & Dropzone */}
                         <div className="pt-2 space-y-2.5">
-                            <div className="flex items-center justify-between text-[11px]">
-                                <span className="text-[#8F9BB7] font-medium">Status Sinkronisasi</span>
+                            <div className="flex items-center justify-between text-xs">
+                                <span className="text-[#CBD5E1] font-medium">Status Sinkronisasi</span>
                                 <span className="flex items-center gap-1 text-[#4ADE80] font-bold">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#4ADE80]" />
                                     Tersambung
@@ -708,16 +710,16 @@ export default function MemberDashboard(props) {
 
                             <div 
                                 onClick={() => setImportModalOpen(true)}
-                                className="bg-[#1A1E33]/70 border border-dashed border-[#4E6EF2]/40 rounded-[18px] p-4 text-center cursor-pointer hover:border-[#4E6EF2] transition space-y-1.5"
+                                className="bg-[#1A1E33]/70 border border-dashed border-[#3557EC]/40 rounded-[18px] p-4 text-center cursor-pointer hover:border-[#3557EC] transition space-y-1.5"
                             >
-                                <CloudUpload className="w-6 h-6 text-[#4E6EF2] mx-auto" />
-                                <p className="text-[11px] font-bold text-white">Tarik file Excel ke sini</p>
-                                <p className="text-[9px] text-[#8F9BB7]">atau klik untuk telusuri dokumen</p>
+                                <CloudUpload className="w-6 h-6 text-[#7C98F8] mx-auto" />
+                                <p className="text-xs font-bold text-white">Tarik file Excel ke sini</p>
+                                <p className="text-xs text-[#CBD5E1]">atau klik untuk telusuri dokumen</p>
                             </div>
                         </div>
                     </div>
 
-                    <p className="text-[10px] text-[#8F9BB7]/70 text-center pt-2">
+                    <p className="text-xs text-[#CBD5E1] text-center pt-2">
                         Sinkronisasi terakhir: 5 menit yang lalu
                     </p>
                 </aside>

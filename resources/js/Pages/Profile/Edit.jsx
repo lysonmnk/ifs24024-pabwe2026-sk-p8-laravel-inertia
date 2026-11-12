@@ -45,10 +45,12 @@ export default function Edit({ user }) {
 
                     <form onSubmit={handleProfileSubmit} className="space-y-4 max-w-lg">
                         <div>
-                            <label className="block text-xs font-bold text-[#14122B] mb-1">Nama Lengkap</label>
+                            <label htmlFor="profile-name" className="block text-xs font-bold text-[#14122B] mb-1">Nama Lengkap</label>
                             <div className="relative">
-                                <User className="w-4 h-4 text-[#A3A2B5] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                                <User className="w-4 h-4 text-[#52506B] absolute left-3.5 top-1/2 -translate-y-1/2" />
                                 <input
+                                    id="profile-name"
+                                    name="name"
                                     type="text"
                                     required
                                     value={profileForm.data.name}
@@ -62,10 +64,12 @@ export default function Edit({ user }) {
                         </div>
 
                         <div>
-                            <label className="block text-xs font-bold text-[#14122B] mb-1">Alamat Email</label>
+                            <label htmlFor="profile-email" className="block text-xs font-bold text-[#14122B] mb-1">Alamat Email</label>
                             <div className="relative">
-                                <Mail className="w-4 h-4 text-[#A3A2B5] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                                <Mail className="w-4 h-4 text-[#52506B] absolute left-3.5 top-1/2 -translate-y-1/2" />
                                 <input
+                                    id="profile-email"
+                                    name="email"
                                     type="email"
                                     required
                                     value={profileForm.data.email}
@@ -79,12 +83,14 @@ export default function Edit({ user }) {
                         </div>
 
                         <div>
-                            <label className="block text-xs font-bold text-[#14122B] mb-1">Peran Akun</label>
+                            <label htmlFor="profile-role" className="block text-xs font-bold text-[#14122B] mb-1">Peran Akun</label>
                             <input
+                                id="profile-role"
+                                name="role"
                                 type="text"
                                 disabled
                                 value={user.role}
-                                className="w-full px-4 py-2.5 rounded-xl border border-[#E8E7F0] bg-[#FAFAFD] text-sm text-[#A3A2B5]"
+                                className="w-full px-4 py-2.5 rounded-xl border border-[#E8E7F0] bg-[#FAFAFD] text-sm text-[#52506B]"
                             />
                         </div>
 
@@ -107,10 +113,12 @@ export default function Edit({ user }) {
 
                     <form onSubmit={handlePasswordSubmit} className="space-y-4 max-w-lg">
                         <div>
-                            <label className="block text-xs font-bold text-[#14122B] mb-1">Kata Sandi Saat Ini</label>
+                            <label htmlFor="current-password" className="block text-xs font-bold text-[#14122B] mb-1">Kata Sandi Saat Ini</label>
                             <div className="relative">
-                                <Lock className="w-4 h-4 text-[#A3A2B5] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                                <Lock className="w-4 h-4 text-[#52506B] absolute left-3.5 top-1/2 -translate-y-1/2" />
                                 <input
+                                    id="current-password"
+                                    name="current_password"
                                     type="password"
                                     required
                                     value={passwordForm.data.current_password}
@@ -124,10 +132,12 @@ export default function Edit({ user }) {
                         </div>
 
                         <div>
-                            <label className="block text-xs font-bold text-[#14122B] mb-1">Kata Sandi Baru</label>
+                            <label htmlFor="new-password" className="block text-xs font-bold text-[#14122B] mb-1">Kata Sandi Baru</label>
                             <div className="relative">
-                                <Lock className="w-4 h-4 text-[#A3A2B5] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                                <Lock className="w-4 h-4 text-[#52506B] absolute left-3.5 top-1/2 -translate-y-1/2" />
                                 <input
+                                    id="new-password"
+                                    name="password"
                                     type="password"
                                     required
                                     value={passwordForm.data.password}
@@ -141,10 +151,12 @@ export default function Edit({ user }) {
                         </div>
 
                         <div>
-                            <label className="block text-xs font-bold text-[#14122B] mb-1">Konfirmasi Kata Sandi Baru</label>
+                            <label htmlFor="confirm-password" className="block text-xs font-bold text-[#14122B] mb-1">Konfirmasi Kata Sandi Baru</label>
                             <div className="relative">
-                                <Lock className="w-4 h-4 text-[#A3A2B5] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                                <Lock className="w-4 h-4 text-[#52506B] absolute left-3.5 top-1/2 -translate-y-1/2" />
                                 <input
+                                    id="confirm-password"
+                                    name="password_confirmation"
                                     type="password"
                                     required
                                     value={passwordForm.data.password_confirmation}

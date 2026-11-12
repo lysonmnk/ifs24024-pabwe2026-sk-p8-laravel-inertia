@@ -29,9 +29,10 @@ export default function UserList({ users, filters }) {
                     </div>
 
                     <form onSubmit={handleSearch} className="max-w-md w-full relative">
-                        <Search className="w-4 h-4 text-[#A3A2B5] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                        <Search className="w-4 h-4 text-[#52506B] absolute left-3.5 top-1/2 -translate-y-1/2" />
                         <input
                             type="text"
+                            aria-label="Cari pengguna berdasarkan nama atau email"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder="Cari pengguna berdasarkan nama atau email..."
@@ -62,7 +63,7 @@ export default function UserList({ users, filters }) {
                                                 </div>
                                                 <div>
                                                     <p className="font-bold text-[#14122B]">{u.name}</p>
-                                                    <p className="text-xs text-[#A3A2B5]">{u.email}</p>
+                                                    <p className="text-xs text-[#52506B] font-medium">{u.email}</p>
                                                 </div>
                                             </div>
                                         </td>
@@ -85,7 +86,7 @@ export default function UserList({ users, filters }) {
                                             </span>
                                         </td>
 
-                                        <td className="py-4 px-4 whitespace-nowrap text-xs text-[#A3A2B5]">
+                                        <td className="py-4 px-4 whitespace-nowrap text-xs text-[#52506B] font-medium">
                                             {new Date(u.created_at).toLocaleDateString('id-ID', {
                                                 day: 'numeric',
                                                 month: 'short',

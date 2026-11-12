@@ -30,9 +30,10 @@ export default function PostList({ posts, filters }) {
 
                     <div className="flex items-center gap-3">
                         <form onSubmit={handleSearch} className="relative">
-                            <Search className="w-4 h-4 text-[#A3A2B5] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                            <Search className="w-4 h-4 text-[#52506B] absolute left-3.5 top-1/2 -translate-y-1/2" />
                             <input
                                 type="text"
+                                aria-label="Cari artikel atau penulis"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 placeholder="Cari artikel atau penulis..."
@@ -81,18 +82,18 @@ export default function PostList({ posts, filters }) {
                                                 )}
                                                 <div className="min-w-0">
                                                     <p className="font-bold text-[#14122B] line-clamp-1">{p.title}</p>
-                                                    <p className="text-xs text-[#A3A2B5] font-mono">/{p.slug}</p>
+                                                    <p className="text-xs text-[#52506B] font-mono font-medium">/{p.slug}</p>
                                                 </div>
                                             </div>
                                         </td>
 
                                         <td className="py-4 px-4 whitespace-nowrap">
                                             <p className="font-semibold text-xs text-[#14122B]">{p.user?.name || '-'}</p>
-                                            <p className="text-[11px] text-[#A3A2B5]">{p.user?.email || ''}</p>
+                                            <p className="text-xs text-[#52506B] font-medium">{p.user?.email || ''}</p>
                                         </td>
 
                                         <td className="py-4 px-4 whitespace-nowrap">
-                                            <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-[#F1F0F7] text-[#6B6A80]">
+                                            <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-[#F1F0F7] text-[#52506B]">
                                                 {p.category}
                                             </span>
                                         </td>
@@ -109,7 +110,7 @@ export default function PostList({ posts, filters }) {
                                             </span>
                                         </td>
 
-                                        <td className="py-4 px-4 whitespace-nowrap text-xs text-[#A3A2B5]">
+                                        <td className="py-4 px-4 whitespace-nowrap text-xs text-[#52506B] font-medium">
                                             {new Date(p.created_at).toLocaleDateString('id-ID', {
                                                 day: 'numeric',
                                                 month: 'short',
@@ -127,7 +128,7 @@ export default function PostList({ posts, filters }) {
                                                     <span>Lihat Publik</span>
                                                 </Link>
                                             ) : (
-                                                <span className="text-xs text-[#A3A2B5] italic">Draf Penulis</span>
+                                                <span className="text-xs text-[#52506B] italic font-medium">Draf Penulis</span>
                                             )}
                                         </td>
                                     </tr>

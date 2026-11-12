@@ -44,19 +44,21 @@ export default function PostIndex({ articles, categories, filters }) {
 
                     {/* Search Bar */}
                     <form onSubmit={handleSearch} className="mt-8 max-w-xl mx-auto flex items-center relative">
-                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#A3A2B5]">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#52506B]">
                             <Search className="w-5 h-5" />
                         </div>
                         <input
                             type="text"
+                            aria-label="Cari artikel berdasarkan judul atau isi konten"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder="Cari artikel berdasarkan judul atau isi konten..."
-                            className="w-full pl-11 pr-28 py-3.5 rounded-full bg-white border border-[#E8E7F0] text-sm text-[#14122B] placeholder-[#A3A2B5] shadow-[0_8px_24px_rgba(20,18,43,0.06)] focus:outline-none focus:border-[#5B4FE9] focus:ring-2 focus:ring-[#5B4FE9]/20 transition"
+                            className="w-full pl-11 pr-28 py-3.5 rounded-full bg-white border border-[#E8E7F0] text-sm text-[#14122B] placeholder-[#52506B] shadow-[0_8px_24px_rgba(20,18,43,0.06)] focus:outline-none focus:border-[#5B4FE9] focus:ring-2 focus:ring-[#5B4FE9]/20 transition"
                         />
                         <button
                             type="submit"
-                            className="absolute right-2 top-1.5 bottom-1.5 px-5 rounded-full bg-[#5B4FE9] hover:bg-[#4A3FD1] text-white text-xs font-semibold transition cursor-pointer shadow-sm"
+                            aria-label="Cari artikel"
+                            className="absolute right-2 top-1.5 bottom-1.5 px-5 rounded-full bg-[#3557EC] hover:bg-[#2A4BD9] text-white text-xs font-semibold transition cursor-pointer shadow-sm"
                         >
                             Cari
                         </button>
@@ -118,10 +120,10 @@ export default function PostIndex({ articles, categories, filters }) {
                                 <div className="p-6 flex-1 flex flex-col justify-between">
                                     <div>
                                         <div className="flex items-center justify-between mb-3">
-                                            <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#E9E7FD] text-[#5B4FE9]">
+                                            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#E9E7FD] text-[#3557EC]">
                                                 {article.category}
                                             </span>
-                                            <span className="flex items-center gap-1 text-xs text-[#A3A2B5]">
+                                            <span className="flex items-center gap-1 text-xs text-[#52506B]">
                                                 <Calendar className="w-3.5 h-3.5" />
                                                 <span>
                                                     {article.published_at
@@ -135,7 +137,7 @@ export default function PostIndex({ articles, categories, filters }) {
                                             </span>
                                         </div>
 
-                                        <h2 className="text-lg font-bold text-[#14122B] group-hover:text-[#5B4FE9] transition line-clamp-2 leading-snug">
+                                        <h2 className="text-lg font-bold text-[#14122B] group-hover:text-[#3557EC] transition line-clamp-2 leading-snug">
                                             <Link href={`/articles/${article.slug}`}>{article.title}</Link>
                                         </h2>
 
@@ -146,7 +148,7 @@ export default function PostIndex({ articles, categories, filters }) {
 
                                     <div className="mt-6 pt-4 border-t border-[#E8E7F0] flex items-center justify-between text-xs">
                                         <div className="flex items-center gap-2 text-[#6B6A80]">
-                                            <div className="w-6 h-6 rounded-full bg-[#E8E7F0] flex items-center justify-center font-bold text-[10px] text-[#14122B]">
+                                            <div className="w-6 h-6 rounded-full bg-[#E8E7F0] flex items-center justify-center font-bold text-xs text-[#14122B]">
                                                 {article.user?.name ? article.user.name.charAt(0) : 'U'}
                                             </div>
                                             <span className="font-medium text-[#14122B]">{article.user?.name || 'Penulis'}</span>
@@ -154,7 +156,7 @@ export default function PostIndex({ articles, categories, filters }) {
 
                                         <Link
                                             href={`/articles/${article.slug}`}
-                                            className="inline-flex items-center gap-1 font-semibold text-[#5B4FE9] hover:text-[#4A3FD1] transition"
+                                            className="inline-flex items-center gap-1 font-semibold text-[#3557EC] hover:text-[#2A4BD9] transition"
                                         >
                                             <span>Baca</span>
                                             <ArrowRight className="w-3.5 h-3.5" />
@@ -166,7 +168,7 @@ export default function PostIndex({ articles, categories, filters }) {
                     </div>
                 ) : (
                     <div className="text-center py-20 bg-white rounded-2xl border border-[#E8E7F0] p-8">
-                        <BookOpen className="w-12 h-12 text-[#A3A2B5] mx-auto mb-4 opacity-50" />
+                        <BookOpen className="w-12 h-12 text-[#52506B] mx-auto mb-4 opacity-50" />
                         <h3 className="text-lg font-bold text-[#14122B]">Belum Ada Artikel Ditemukan</h3>
                         <p className="mt-1 text-sm text-[#6B6A80] max-w-md mx-auto">
                             Tidak ada artikel yang cocok dengan filter atau pencarian Anda. Coba reset filter untuk melihat seluruh publikasi.
@@ -177,7 +179,7 @@ export default function PostIndex({ articles, categories, filters }) {
                                 setSelectedCategory('');
                                 router.get('/articles');
                             }}
-                            className="mt-6 px-4 py-2 rounded-full bg-[#5B4FE9] text-white text-xs font-semibold hover:bg-[#4A3FD1] transition cursor-pointer"
+                            className="mt-6 px-4 py-2 rounded-full bg-[#3557EC] text-white text-xs font-semibold hover:bg-[#2A4BD9] transition cursor-pointer"
                         >
                             Reset Filter Pencarian
                         </button>
@@ -193,7 +195,7 @@ export default function PostIndex({ articles, categories, filters }) {
                                     <span
                                         key={index}
                                         dangerouslySetInnerHTML={{ __html: link.label }}
-                                        className="px-3 py-1.5 rounded-lg text-xs text-[#A3A2B5] opacity-50"
+                                        className="px-3 py-1.5 rounded-lg text-xs text-[#52506B] opacity-50"
                                     />
                                 );
                             }
@@ -204,7 +206,7 @@ export default function PostIndex({ articles, categories, filters }) {
                                     dangerouslySetInnerHTML={{ __html: link.label }}
                                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
                                         link.active
-                                            ? 'bg-[#5B4FE9] text-white'
+                                            ? 'bg-[#3557EC] text-white'
                                             : 'bg-white border border-[#E8E7F0] text-[#6B6A80] hover:text-[#14122B]'
                                     }`}
                                 />
