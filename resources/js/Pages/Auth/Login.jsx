@@ -137,7 +137,7 @@ export default function Login() {
                     <form action="/login" method="POST" onSubmit={submit} className="space-y-4">
                         {/* Email Field */}
                         <div className="space-y-1.5">
-                            <label htmlFor="email" className="block text-xs font-semibold text-[#8F9BB7]">
+                            <label htmlFor="login-username" className="block text-xs font-semibold text-[#8F9BB7]">
                                 Surel atau Nama Pengguna
                             </label>
                             <div className="relative">
@@ -145,7 +145,7 @@ export default function Login() {
                                     <AtSign className="w-4 h-4" />
                                 </div>
                                 <input
-                                    id="email"
+                                    id="login-username"
                                     data-testid="email"
                                     type="text"
                                     name="email"
@@ -163,7 +163,7 @@ export default function Login() {
                         {/* Password Field */}
                         <div className="space-y-1.5">
                             <div className="flex items-center justify-between">
-                                <label htmlFor="password" className="block text-xs font-semibold text-[#8F9BB7]">
+                                <label htmlFor="login-password" className="block text-xs font-semibold text-[#8F9BB7]">
                                     Kata Sandi
                                 </label>
                                 <span className="text-[10px] text-[#8F9BB7] hover:text-white cursor-pointer">
@@ -175,7 +175,7 @@ export default function Login() {
                                     <Lock className="w-4 h-4" />
                                 </div>
                                 <input
-                                    id="password"
+                                    id="login-password"
                                     data-testid="password"
                                     type={showPassword ? 'text' : 'password'}
                                     name="password"
