@@ -209,6 +209,7 @@ export default function Login() {
                                 id="remember-me"
                                 type="checkbox"
                                 name="remember"
+                                value="1"
                                 checked={data.remember}
                                 onChange={(e) => setData('remember', e.target.checked)}
                                 className="w-4 h-4 rounded bg-[#121526] border-white/20 text-[#4E6EF2] focus:ring-0 cursor-pointer"

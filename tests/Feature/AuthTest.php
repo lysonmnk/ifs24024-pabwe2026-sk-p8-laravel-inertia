@@ -107,10 +107,11 @@ class AuthTest extends TestCase
         // Logout
         $this->post('/logout');
 
-        // Login with 'ifs24024' alias and password fallback
+        // Login with 'ifs24024' alias, password fallback, and checkbox remember='on'
         $respNim = $this->post('/login', [
             'username' => 'ifs24024',
             'password' => 'password',
+            'remember' => 'on',
         ]);
         $this->assertAuthenticatedAs($admin);
         $respNim->assertRedirect(route('admin.users.index'));

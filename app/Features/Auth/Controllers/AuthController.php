@@ -29,6 +29,10 @@ class AuthController extends Controller
             $request->merge(['email' => $request->input('username')]);
         }
 
+        if ($request->has('remember')) {
+            $request->merge(['remember' => $request->boolean('remember')]);
+        }
+
         $validated = $request->validate([
             'email' => ['required', 'email', 'max:255'],
             'password' => ['required', 'string', 'min:8'],
