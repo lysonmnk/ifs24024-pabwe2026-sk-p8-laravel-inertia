@@ -314,7 +314,7 @@ export default function MemberDashboard(props) {
                             </div>
                         </div>
 
-                        <button aria-label="Pengaturan" className="text-[#CBD5E1] hover:text-white transition">
+                        <button aria-label="Pengaturan" className="p-2.5 rounded-xl text-[#CBD5E1] hover:text-white transition flex items-center justify-center">
                             <Settings className="w-5 h-5" />
                         </button>
                     </div>
@@ -406,10 +406,10 @@ export default function MemberDashboard(props) {
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 placeholder="Cari artikel saya..."
-                                className="w-full bg-[#272D48] text-xs text-white placeholder-[#CBD5E1] rounded-full pl-4 pr-9 py-2.5 border border-transparent focus:border-[#3557EC] focus:outline-none transition"
+                                className="w-full bg-[#272D48] text-xs text-white placeholder-[#CBD5E1] rounded-full pl-4 pr-10 py-2.5 border border-transparent focus:border-[#3557EC] focus:outline-none transition"
                             />
-                            <button type="submit" aria-label="Cari artikel" className="absolute right-3 top-1/2 -translate-y-1/2 text-[#CBD5E1]">
-                                <Search className="w-3.5 h-3.5" />
+                            <button type="submit" aria-label="Cari artikel" className="absolute right-1 top-1/2 -translate-y-1/2 p-2 rounded-full text-[#CBD5E1] hover:text-white transition flex items-center justify-center">
+                                <Search className="w-4 h-4" />
                             </button>
                         </form>
 
@@ -585,18 +585,18 @@ export default function MemberDashboard(props) {
                                                 onClick={() => handleTogglePublish(post)}
                                                 title="Ganti status publikasi"
                                                 aria-label={`Ganti status publikasi ${post.title}`}
-                                                className="p-1.5 rounded-lg text-[#CBD5E1] hover:text-white hover:bg-[#1A1E33] transition"
+                                                className="p-2 rounded-lg text-[#CBD5E1] hover:text-white hover:bg-[#1A1E33] transition flex items-center justify-center"
                                             >
-                                                <ArrowLeftRight className="w-3.5 h-3.5" />
+                                                <ArrowLeftRight className="w-4 h-4" />
                                             </button>
 
                                             <div className="relative">
                                                 <button
                                                     onClick={() => setOpenKebabId(openKebabId === post.id ? null : post.id)}
                                                     aria-label={`Menu tindakan untuk ${post.title}`}
-                                                    className="p-1.5 rounded-lg text-[#CBD5E1] hover:text-white hover:bg-[#1A1E33] transition"
+                                                    className="p-2 rounded-lg text-[#CBD5E1] hover:text-white hover:bg-[#1A1E33] transition flex items-center justify-center"
                                                 >
-                                                    <MoreVertical className="w-3.5 h-3.5" />
+                                                    <MoreVertical className="w-4 h-4" />
                                                 </button>
 
                                                 {openKebabId === post.id && (
