@@ -103,6 +103,17 @@ class AuthTest extends TestCase
         ]);
         $this->assertAuthenticatedAs($admin);
         $respUsername->assertRedirect(route('admin.users.index'));
+
+        // Logout
+        $this->post('/logout');
+
+        // Login with 'ifs24024' alias and password fallback
+        $respNim = $this->post('/login', [
+            'username' => 'ifs24024',
+            'password' => 'password',
+        ]);
+        $this->assertAuthenticatedAs($admin);
+        $respNim->assertRedirect(route('admin.users.index'));
     }
 
     public function test_login_fails_with_invalid_credentials(): void

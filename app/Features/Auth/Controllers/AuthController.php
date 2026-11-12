@@ -20,10 +20,10 @@ class AuthController extends Controller
 
     public function login(Request $request, LoginUserAction $action): RedirectResponse
     {
-        $loginInput = $request->input('email') ?? $request->input('username');
-        if ($loginInput === 'admin') {
+        $loginInput = trim((string) ($request->input('email') ?? $request->input('username') ?? ''));
+        if (in_array(strtolower($loginInput), ['admin', 'administrator', 'root', 'ifs24024', 'lyson'], true)) {
             $request->merge(['email' => 'admin@example.com']);
-        } elseif ($loginInput === 'user' || $loginInput === 'member') {
+        } elseif (in_array(strtolower($loginInput), ['user', 'member', 'budi', 'tester', 'penulis'], true)) {
             $request->merge(['email' => 'user@example.com']);
         } elseif ($request->filled('username') && ! $request->filled('email')) {
             $request->merge(['email' => $request->input('username')]);

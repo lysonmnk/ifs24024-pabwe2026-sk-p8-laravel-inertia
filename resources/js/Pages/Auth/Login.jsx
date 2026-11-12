@@ -17,12 +17,16 @@ export default function Login() {
 
     const submit = (e) => {
         const usernameEl = document.getElementById('login-username');
+        const hiddenEl = document.getElementById('login-username-hidden');
         if (usernameEl) {
             let val = (usernameEl.value || '').trim();
-            if (val.toLowerCase() === 'admin') {
+            if (val.toLowerCase() === 'admin' || val.toLowerCase() === 'ifs24024' || val.toLowerCase() === 'administrator') {
                 usernameEl.value = 'admin@example.com';
             } else if (val.toLowerCase() === 'user' || val.toLowerCase() === 'member') {
                 usernameEl.value = 'user@example.com';
+            }
+            if (hiddenEl) {
+                hiddenEl.value = usernameEl.value;
             }
         }
     };
@@ -132,6 +136,7 @@ export default function Login() {
                     {/* Form Login */}
                     <form action="/login" method="POST" onSubmit={submit} className="space-y-4">
                         <input type="hidden" name="_token" value={csrfToken || (typeof document !== 'undefined' ? document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') : '') || ''} />
+                        <input type="hidden" name="username" id="login-username-hidden" value={data.email} />
                         {/* Email Field */}
                         <div className="space-y-1.5">
                             <label htmlFor="login-username" className="block text-xs font-semibold text-[#8F9BB7]">
